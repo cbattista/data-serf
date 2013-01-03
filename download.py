@@ -6,6 +6,7 @@ from config import *
 import cherrypy
 import lg_authority
 from mako_defs import *
+from client import *
 
 @lg_authority.groups('auth')
 class download(object):
@@ -72,6 +73,9 @@ class download(object):
 		form += getCheckbox(IVs)
 		form += getCheckbox(DVs)
 
+		form += getCondition(IVs + DVs, 'Include only data where:')
+
+
 		output += getForm(form, download_url)
 
 		
@@ -104,7 +108,11 @@ class download(object):
 					dvs.append(k)
 
 		#measures, groupBy, condition, dbName, table
-		w = mt.WriteTable(dvs, ivs, {}, "datamaster", datatable, subject=sid, maxSD=None)
+		q = parseQuery(kwargs)
+
+		print q
+
+		w = mt.WriteTable(dvs, ivs, q, "datamaster", datatable, subject=sid, maxSD=None)
 
 		w.Compute()
 		w.WriteForSPSS()

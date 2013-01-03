@@ -2,13 +2,14 @@ from mako.template import Template
 import cherrypy
 from config import *
 
+
 def getPage(data, title=""):
 	page_tpl = Template(filename="page.tpl")
 	if cherrypy.user:
 		name = cherrypy.user.name
-		output = page_tpl.render(data=data, title=title, user=name)
+		output = page_tpl.render(data=data, title=title, user=name, main_url=main_url, urls=urls)
 	else:
-		output = page_tpl.render(data=data, title=title, user=None)
+		output = page_tpl.render(data=data, title=title, user=None, main_url=main_url, urls=urls)
 	return output
 
 no_table = "<p>You must select a table before performing this action.  <a href='%s'>Click here to select a table</a></p>" % manage_url
@@ -61,6 +62,26 @@ template = Template("""
 	</form>
 	</fieldset>
 	</%def>
+
+<%def name = "condition(var_options, label)">
+	<em>${label}</em>
+	<select name='if_var'>
+	<option></option>
+	%for vo in var_options:
+		<option>${vo}</option>
+	%endfor
+	</select>
+	<select name='if'>
+		<option/>
+		<option>==</option>
+		<option>!=</option>
+		<option>>=</option>
+		<option>></option>
+		<option><=</option>
+		<option><</option>
+	</select>
+	<input type='text' name='if_text' />
+</%def>
 
 <%def name = "modify(var_options)">
 	<h2>transform an existing variable</h2>
@@ -220,6 +241,10 @@ def getCheckbox(myList, br=False):
 		output += "<label class='checkbox'><input type='checkbox' name='%s'/>%s</label>" % (l, l)
 		if br:
 			output += "<br/>"
+	return output
+
+def getCondition(var_options, label=""):
+	output = template.get_def("condition").render(var_options=var_options, label=label)
 	return output
 
 def getLearnContent():
