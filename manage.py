@@ -55,7 +55,7 @@ class manage(object):
 
 		accordion = getAccordion(items)
 
-		output = getPage(accordion, "Manage")
+		output = getPage(accordion, "manage", "manage")
 
 		return output
 

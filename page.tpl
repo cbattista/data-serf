@@ -19,6 +19,7 @@
       }
     </style>
     <link href="${domain}/assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="${domain}/assets/css/dataserf.css" rel="stylesheet">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -61,40 +62,57 @@
     <div class="container">
 
       <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="hero-unit">
+	  %if contentID:
+	      <div class="hero-unit" id = "${contentID}">
+      %else :
+	      <div class="hero-unit">
+	  %endif
         <h1>${title}</h1>
 		<div id="content">${data}</div>
       </div>
 
       <hr>
 
-      <div class="row">
-        <div class="span3">
-          <h2>Upload</h2>
+
+	    <div class="row-fluid">
+
+        <li class="span3">
+	      <div class=thumbnail" id="upload">
+          <h2>upload</h2>
            <p>Upload some files or review the ones you've already uploaded.</p>
           <p><a class="btn" href="${urls[1]}">Upload some files.&raquo;</a></p>
-        </div>
-        <div class="span3">
-          <h2>Manage</h2>
+		  </div>
+        </li>
+
+        <li class="span3">
+		  <div class=thumbnail" id="manage">
+          <h2>manage</h2>
            <p>Identify the variables you are interested in.</p>
           <p><a class="btn" href="${urls[2]}">Manage your data &raquo;</a></p>
-       </div>
-        <div class="span3">
-          <h2>Modify</h2>
+		  </div>
+       </li>
+
+        <li class="span3">
+		  <div class=thumbnail" id="modify">
+          <h2>modify</h2>
            <p>Edit your variables and create new ones.</p>
           <p><a class="btn" href="${urls[3]}">Modify your data &raquo;</a></p>
-       </div>
+		  </div>
+       </li>
 
-        <div class="span3">
-          <h2>Download</h2>
+        <li class="span3">
+		  <div class=thumbnail" id="download">
+          <h2>download</h2>
           <p>Aggregate your data and download it.</p>
           <p><a class="btn" href="${urls[4]}">Download some files &raquo;</a></p>
-          <p></p>
-        </div>
+		  </div>
+        </li>
+
+   	  </ul>
       </div>
 
       <footer>
-        <p>&copy; Christian Battista's DataMaster 2012</p>
+        <p>&copy; 2012 Christian Battista's dataserf</p>
       </footer>
 
     </div> <!-- /container -->

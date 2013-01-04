@@ -69,7 +69,7 @@ class FileDemo(object):
 
 		output += getAccordion(items)
 
-		return getPage(output, "Upload")
+		return getPage(output, "upload", "upload")
 
 	def remove(self, kwargs):
 		table = kwargs['table_remove']

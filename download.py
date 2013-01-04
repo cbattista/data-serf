@@ -53,7 +53,7 @@ class download(object):
 
 		output += getAccordion(items)
 
-		return getPage(output, "Download")
+		return getPage(output, "download", "download")
 
 
 	def agg(self, table):

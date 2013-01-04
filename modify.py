@@ -54,7 +54,7 @@ class modify(object):
 
 		output += getAccordion(items)
 
-		return getPage(output, "Modify")
+		return getPage(output, "modify", "modify")
 
 
 	def create(self, table, kwargs):
