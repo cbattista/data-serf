@@ -8,23 +8,28 @@
   -webkit-border-radius: 6px;
      -moz-border-radius: 6px;
           border-radius: 6px;
+  border: 1px solid #DDDDDD;
 }
 
 #upload {
 	background-color: #FFCCCC;
+	border: 1px solid #EEBBBB;
 }
 
 #manage {
 	background-color:#FFFFBB;
+	 border: 1px solid #EEEEAA;
 }
 
 
 #modify {
 	background-color: #CCFFCC;
+        border: 1px solid #BBEEBB;
 }
 
 #download {
 	background-color: #DDDDFF;
+	border: 1px solid #CCCCEE;
 }
 
 .accordion-group {
@@ -41,5 +46,14 @@ a.accordion-toggle {
 
 
 .accordion-heading {
+	background-color: #EEEEEE;
+}
+
+.hero-unit {
+	background-color: #FFFFFF;
+	border: 1px solid #DDDDDD;
+}
+
+body {
 	background-color: #EEEEEE;
 }
