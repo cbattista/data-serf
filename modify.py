@@ -52,7 +52,7 @@ class modify(object):
 	
 		items = [['create', create], ['merge', merge], ['modify', modify]]
 
-		output += getAccordion(items)
+		output += getAccordion(items, contentID='modify-small')
 
 		return getPage(output, "modify", "modify")
 

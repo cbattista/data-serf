@@ -180,11 +180,11 @@ template = Template("""
 	</label>
 </%def>
 
-<%def name = "accordion(items, startIndex)">
+<%def name = "accordion(items, startIndex, contentID)">
 	<div class="accordion">
 		%for item in items:
 		<div class="accordion-group">
-			<div class="accordion-heading">
+			<div class="accordion-heading" id="${contentID}">
 				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse${items.index(item) + startIndex}"><h2>${item[0]}</h2></a>
 			</div>
 			<div id="collapse${items.index(item) + startIndex}" class="accordion-body collapse">
@@ -214,19 +214,19 @@ template = Template("""
 	<br/>
 	<h1>labors of the dataserf</h1>
 
-	<div id="upload">
+	<div class="thumbnail" id="upload-small">
 	<h2>upload</h2>
 	<p>If you've just started using the dataserf, the first thing you need to do is create a table for your data to be stored in.  Then you select the files you want to upload.  At this point, the dataserf can handle those weird .txt files that E-Prime spits out and also any .csv files that have titles for the columns.  Don't try to upload those .edat type files though, that won't work (use the weird .txt files instead).  The dataserf can also handle comma separated.  The dataserf will assume that files like this have a trial's worth of data on each row, and that the first row contains the column labels.</p>
 	<p>Once you've selected your files, you can upload them (it may take a bit for them to upload, usually I have to wait about a minute for 40 files to get onto the server).</p>
 	<p>When the files have uploaded, you can review them and make sure they all uploaded.  Later on if you decide you want to remove some of them from the table, you can go to the review section to pull some out.</p>
 	</div>	
 
-	<div id = "manage">
+	<div class="thumbnail" id = "manage-small">
 	<h2>manage</h2>
 	<p>Here's an important step.  This is where you tell the dataserf what variables you're interested in.  You should indicate what your independent variables and dependent variables are, and also what variable name you're using to indicate your subject and trial variables.  Once you've selected these, you can review them to make sure you picked all the ones you're interested in (and you can always go back later and select some more).</p>
 	</div>
 
-	<div id="modify">
+	<div class="thumbnail" id="modify-small">
 	<h2>modify</h2>
 	<p>This one's optional - sometimes you need to change a variable or add a new one - here's where you do that.  You can make a new variable, either from scratch or based off an existing one.</p>
 	<p>You can also make a new variable by merging two existing variables.  If they're numbers you can add, subtract, multiply or divide them.  If they're text variables, then you can join them together using 'join text'.</p>
@@ -239,7 +239,7 @@ template = Template("""
 	<p>Pretty simple, huh?</p>
 	</div>
 
-	<div id="download">
+	<div class="thumbnail" id="download-small">
 	<h2>download</h2>
 	<p>Here's the really magical part.  Just check off the variables you want to see in your file and you're off to the races.  Right now the file you'll get is one suitable for SPSS (where each participant's data is on a separate row).  They take a bit to make, but any files you create can be downloaded later on.</p>
 	<p>Also, you have the option of including only certain values from your table.  You can specify this like you did in the 'Modify' section.</p>
@@ -270,8 +270,8 @@ def getIndexContent():
 	output = template.get_def("index_content").render(lc=learn_url)
 	return output
 
-def getAccordion(items, startIndex=0):
-	output = template.get_def("accordion").render(items=items, startIndex=startIndex)
+def getAccordion(items, startIndex=0, contentID=""):
+	output = template.get_def("accordion").render(items=items, startIndex=startIndex, contentID=contentID)
 	return output
 
 def getTable(data, title=""):

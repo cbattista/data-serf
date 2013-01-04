@@ -1,36 +1,56 @@
 /*dataserf.css*/
 
 
-#upload, #manage, #modify, #download {
-  padding: 40px;
-  margin-bottom: 30px;
-  background-color: #eeeeee;
-  -webkit-border-radius: 6px;
-     -moz-border-radius: 6px;
-          border-radius: 6px;
-  border: 1px solid #DDDDDD;
+.thumbnail {
+	padding: 30px;
 }
 
-#upload {
+#upload-small, #manage-small, #modify-small, #download-small {
+}
+
+#upload, #manage, #modify, #download {
+ 	border: 1px solid #DDDDDD;
+}
+
+#upload-small {
 	background-color: #FFCCCC;
 	border: 1px solid #EEBBBB;
 }
 
-#manage {
+#upload {
+	border-color: #EEBBBB;
+}
+
+
+#manage-small {
 	background-color:#FFFFBB;
 	 border: 1px solid #EEEEAA;
 }
 
+#manage {
+	 border-color: #EEEEAA;
+}
 
-#modify {
+
+#modify-small {
 	background-color: #CCFFCC;
         border: 1px solid #BBEEBB;
 }
 
-#download {
+#modify {
+        border-color: #BBEEBB;
+}
+
+
+#download-small {
 	background-color: #DDDDFF;
 	border: 1px solid #CCCCEE;
 }
+
+#download {
+	border-color: #CCCCEE;
+}
+
 
 .accordion-group {
 	background-color: #FFFFFF;
@@ -54,6 +74,4 @@ a.accordion-toggle {
 	border: 1px solid #DDDDDD;
 }
 
-body {
-	background-color: #EEEEEE;
-}
+

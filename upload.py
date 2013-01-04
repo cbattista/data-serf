@@ -67,7 +67,7 @@ class FileDemo(object):
 
 		items = [['select a table', select_table], ['select your files', select_files], ['review files', review_files]]
 
-		output += getAccordion(items)
+		output += getAccordion(items, contentID = 'upload-small')
 
 		return getPage(output, "upload", "upload")
 

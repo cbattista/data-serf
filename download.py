@@ -51,7 +51,7 @@ class download(object):
 
 		items = [['make new file', aggregate], ["download existing file", dl]]
 
-		output += getAccordion(items)
+		output += getAccordion(items, contentID='download-small')
 
 		return getPage(output, "download", "download")
 

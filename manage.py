@@ -53,7 +53,7 @@ class manage(object):
 
 		items = [['select table', select_table], ['choose variables', choose_vars], ['review variables', review_vars]]
 
-		accordion = getAccordion(items)
+		accordion = getAccordion(items, contentID='manage-small')
 
 		output = getPage(accordion, "manage", "manage")
 
