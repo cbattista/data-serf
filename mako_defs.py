@@ -198,13 +198,13 @@ template = Template("""
 </%def>
 
 <%def name="index_content(lc)">
-       <p>We provide easy online data management for scientists and science students, particularly those in the behavioral sciences.  Upload your raw data files from programs like E-Prime and format them so they're ready for use in a stats program like SPSS or R.</p>
+       <p>The dataserf provides digital labor for behavioral scientists.  Upload your raw data files from programs like E-Prime and format them so they're ready for use in a stats program like SPSS or R.</p>
         <p><a class="btn btn-primary btn-large" href="${lc}">Learn more &raquo;</a></p>
 
 </%def>
 
 <%def name='learn_content()'>
-	<p>Hey there, my name is Christian and I am the guy who made the Dataserf.  First off, I should point out that this site is in its early stages, so bear with me.  I do believe though that it works well enough to do some basic data aggregation for you.</p>
+	<p>Hey there, my name is Christian and I am the guy who made the dataserf.  First off, I should point out that this site is in its early stages, so bear with me.  I do believe though that it works well enough to do some basic data aggregation for you.</p>
 	<p>Before we get rockin', let me explain some terms I'm going to use.  When you analyze your data, you usually have it organized in a spreadsheet that you put into SPSS or R or something.  But before that happens, you need to organize all your individual subject files, average all the values, maybe changing the labels of some of your conditions or adjusting things like reaction or whatever.  This usually manifests itself as a whole pile a bitchwork a smart person like yourself shouldn't have to deal with.  That's where I come in.  Basically, we're going to put your data into a storage unit called a <em>table</em>.  In general you can think of each table as a place to hold data from all your subjects for a given experiment.  The other term you know is the <em>variable</em>.  Basically what a variable is what is what's in a column in your spreadsheet.  So this might be your reaction time data, accuracy, or your experimental conditions.  The last term I'm going to use is <em>database</em> - that's basically the thing that holds all your tables (and within the tables, your variables).</p>
 
 	<h3>Upload</h3>
