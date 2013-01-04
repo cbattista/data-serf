@@ -11,7 +11,7 @@ def getPage(data, title="", contentID=""):
 		output = page_tpl.render(data=data, title=title, user=None, main_url=main_url, urls=urls, domain=domain, contentID=contentID)
 	return output
 
-no_table = "<p>You must select a table before performing this action.  <a href='%s'>Click here to select a table</a></p>" % manage_url
+no_table = "<p>You must select a table before performing this action.  <a href='%s'>Click here to select a table</a>.</p>" % manage_url
 
 def getSuccess(data):
 	output = "<div class='alert alert-success'>%s</div>" % data
@@ -204,18 +204,30 @@ template = Template("""
 </%def>
 
 <%def name='learn_content()'>
-	<p>Hey there, my name is Christian and I am the guy who made the dataserf.  First off, I should point out that this site is in its early stages, so bear with me.  I do believe though that it works well enough to do some basic data aggregation for you.</p>
-	<p>Before we get rockin', let me explain some terms I'm going to use.  When you analyze your data, you usually have it organized in a spreadsheet that you put into SPSS or R or something.  But before that happens, you need to organize all your individual subject files, average all the values, maybe changing the labels of some of your conditions or adjusting things like reaction or whatever.  This usually manifests itself as a whole pile of repetitive tasks that you don't want to do.  The dataserf was built to do these tasks for you.  Basically, we're going to put your data into a storage unit called a <em>table</em>.  In general you can think of each table as a place to hold data from all your subjects for a given experiment.  The other term you know is the <em>variable</em>.  A variable is a value from a column in your spreadsheet.  So this might be your reaction time data, accuracy, or your experimental conditions.  The last term I'm going to use is <em>database</em> - that's basically the thing that holds all your tables (and within the tables, your variables).</p>
+	<p>Greetings Lords and Ladies, my name is Christian and I am the guy who made the dataserf.  The dataserf is in its early stages, but I do believe though that it works well enough to perform some basic labours, including data modification and aggregration, for you.</p>
+	<p>When you analyze your data, you usually have it organized in a spreadsheet that you put into SPSS or R or something.  But before that happens, you need to organize all your individual subject files, average all the values, maybe changing the labels of some of your conditions or adjusting variables like reaction time.  This usually manifests itself as a whole pile of repetitive tasks that you don't want to do.</p>
+	<p>The dataserf was built to do these tasks for you.  It will put your data into a storage unit called a <em>table</em>.  Each table is a place to hold data from all your subjects for a given experiment.</p>
+	<p>Once the dataserf has your data in a table, it can modify the <em>variables</em>.  A variable is a value from a column in your spreadsheet.  So this might be your reaction time data, accuracy, or your experimental conditions.</p>
+	<p>Using a table, the dataserf can also average your data into a summary spreadsheet for you to download.</p>
+	<br/>
+	<p>Now that we've covered the basics, we are ready to learn the 4 labors the dataserf knows how to perform...</p>
+	<br/>
+	<h1>labors of the dataserf</h1>
 
-	<h3>Upload</h3>
-	<p>First thing you need to do is create a table for your data to be stored in.  Then you select the files you want to upload.  At this point, the dataserf can handle those weird .txt files that E-Prime spits out and also any .csv files that have titles for the columns.  Don't try to upload those .edat type files though, that won't work (use the weird .txt files instead).</p>
-	<p>Anyway, once you've selected your files, you can upload them (it may take a bit for them to upload, usually I have to wait about a minute for 40 files to get onto the server).</p>
-	<p>Once they're all uploaded, you can review them and make sure they all uploaded OK.  Later on if you decide you want to remove some of them from the database, you can go to the review section to pull some out.</p>
-	
-	<h3>Manage</h3>
+	<div id="upload">
+	<h2>upload</h2>
+	<p>If you've just started using the dataserf, the first thing you need to do is create a table for your data to be stored in.  Then you select the files you want to upload.  At this point, the dataserf can handle those weird .txt files that E-Prime spits out and also any .csv files that have titles for the columns.  Don't try to upload those .edat type files though, that won't work (use the weird .txt files instead).  The dataserf can also handle comma separated.  The dataserf will assume that files like this have a trial's worth of data on each row, and that the first row contains the column labels.</p>
+	<p>Once you've selected your files, you can upload them (it may take a bit for them to upload, usually I have to wait about a minute for 40 files to get onto the server).</p>
+	<p>When the files have uploaded, you can review them and make sure they all uploaded.  Later on if you decide you want to remove some of them from the table, you can go to the review section to pull some out.</p>
+	</div>	
+
+	<div id = "manage">
+	<h2>manage</h2>
 	<p>Here's an important step.  This is where you tell the dataserf what variables you're interested in.  You should indicate what your independent variables and dependent variables are, and also what variable name you're using to indicate your subject and trial variables.  Once you've selected these, you can review them to make sure you picked all the ones you're interested in (and you can always go back later and select some more).</p>
+	</div>
 
-	<h3>Modify</h3>
+	<div id="modify">
+	<h2>modify</h2>
 	<p>This one's optional - sometimes you need to change a variable or add a new one - here's where you do that.  You can make a new variable, either from scratch or based off an existing one.</p>
 	<p>You can also make a new variable by merging two existing variables.  If they're numbers you can add, subtract, multiply or divide them.  If they're text variables, then you can join them together using 'join text'.</p>
 	<p>The last thing you can do is transform a variable, either applying the change to all the values or only to some of them.  Here's an example : a common thing psych types need to do is apply an RT penalty when a participant gets a question wrong.  So let's say you have the variables RT (reaction time, in seconds) and ACC (accuracy, where 1 is correct and 0 is incorrect).  And let's say you wanted to add 200 milliseconds to all the RTs where the participant made an incorrect response.  Here's what you would do:</p>
@@ -225,11 +237,14 @@ template = Template("""
 	<p>If RT >= 2.5</p>
 	<p>Set ACC = 0</p>
 	<p>Pretty simple, huh?</p>
+	</div>
 
-	<h3>Download</h3>
+	<div id="download">
+	<h2>download</h2>
 	<p>Here's the really magical part.  Just check off the variables you want to see in your file and you're off to the races.  Right now the file you'll get is one suitable for SPSS (where each participant's data is on a separate row).  They take a bit to make, but any files you create can be downloaded later on.</p>
 	<p>Also, you have the option of including only certain values from your table.  You can specify this like you did in the 'Modify' section.</p>
 	<br/>
+	</div>
 	<p>And that's about it.  Click on the links below to get started.</p>
 </%def>
 
