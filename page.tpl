@@ -8,17 +8,17 @@
     <meta name="author" content="">
 
 	<!-- Le jquery -->
-    <script src="${main_url}/assets/js/jquery.js"></script>
+    <script src="${domain}/assets/js/jquery.js"></script>
 
     <!-- Le styles -->
-    <link href="${main_url}/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="${domain}/assets/css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 60px;
         padding-bottom: 40px;
       }
     </style>
-    <link href="${main_url}/assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="${domain}/assets/css/bootstrap-responsive.css" rel="stylesheet">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="${main_url}/assets/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="${main_url}/assets/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="${main_url}/assets/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="${main_url}/assets/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="${domain}/assets/ico/apple-touch-icon-57-precomposed.png">
   </head>
 
   <body>
@@ -46,7 +46,7 @@
           <a class="brand" href="#">datamaster</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="${main_url}">Home</a></li>
+              <li class="active"><a href="${domain}">Home</a></li>
               <li><a href="${urls[5]}">About</a></li>
 			%if user:
 			  <li><a href="#">Logged in as ${user}</a></li>
@@ -102,17 +102,17 @@
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="${main_url}/assets/js/bootstrap-transition.js"></script>
-    <script src="${main_url}/assets/js/bootstrap-alert.js"></script>
-    <script src="${main_url}/assets/js/bootstrap-modal.js"></script>
-    <script src="${main_url}/assets/js/bootstrap-dropdown.js"></script>
-    <script src="${main_url}/assets/js/bootstrap-scrollspy.js"></script>
-    <script src="${main_url}/assets/js/bootstrap-tab.js"></script>
-    <script src="${main_url}/assets/js/bootstrap-tooltip.js"></script>
-    <script src="${main_url}/assets/js/bootstrap-popover.js"></script>
-    <script src="${main_url}/assets/js/bootstrap-button.js"></script>
-    <script src="${main_url}/assets/js/bootstrap-collapse.js"></script>
-    <script src="${main_url}/assets/js/bootstrap-carousel.js"></script>
-    <script src="${main_url}/assets/js/bootstrap-typeahead.js"></script>
+    <script src="${domain}/assets/js/bootstrap-transition.js"></script>
+    <script src="${domain}/assets/js/bootstrap-alert.js"></script>
+    <script src="${domain}/assets/js/bootstrap-modal.js"></script>
+    <script src="${domain}/assets/js/bootstrap-dropdown.js"></script>
+    <script src="${domain}/assets/js/bootstrap-scrollspy.js"></script>
+    <script src="${domain}/assets/js/bootstrap-tab.js"></script>
+    <script src="${domain}/assets/js/bootstrap-tooltip.js"></script>
+    <script src="${domain}/assets/js/bootstrap-popover.js"></script>
+    <script src="${domain}/assets/js/bootstrap-button.js"></script>
+    <script src="${domain}/assets/js/bootstrap-collapse.js"></script>
+    <script src="${domain}/assets/js/bootstrap-carousel.js"></script>
+    <script src="${domain}/assets/js/bootstrap-typeahead.js"></script>
   </body>
 </html>

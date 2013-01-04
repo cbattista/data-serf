@@ -2,14 +2,13 @@ from mako.template import Template
 import cherrypy
 from config import *
 
-
 def getPage(data, title=""):
 	page_tpl = Template(filename="page.tpl")
 	if cherrypy.user:
 		name = cherrypy.user.name
-		output = page_tpl.render(data=data, title=title, user=name, main_url=main_url, urls=urls)
+		output = page_tpl.render(data=data, title=title, user=name, main_url=main_url, urls=urls, domain=domain)
 	else:
-		output = page_tpl.render(data=data, title=title, user=None, main_url=main_url, urls=urls)
+		output = page_tpl.render(data=data, title=title, user=None, main_url=main_url, urls=urls, domain=domain)
 	return output
 
 no_table = "<p>You must select a table before performing this action.  <a href='%s'>Click here to select a table</a></p>" % manage_url
