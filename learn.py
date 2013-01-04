@@ -15,7 +15,7 @@ class learn(object):
 
 		output += getLearnContent()
 
-		output = getPage(output, 'Datamaster How-To')
+		output = getPage(output, 'dataserf basics')
 
 		return output 
 
