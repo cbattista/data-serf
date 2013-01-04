@@ -18,7 +18,7 @@ class index(object):
 
 		output += getIndexContent()
 
-		output = getPage(output, 'Datamaster')
+		output = getPage(output, 'dataserf')
 
 		return output 
 

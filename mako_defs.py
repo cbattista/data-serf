@@ -204,7 +204,7 @@ template = Template("""
 </%def>
 
 <%def name='learn_content()'>
-	<p>Hey there, my name is Christian and I am the guy who made Datamaster.  First off, I should point out that this site is in its early stages, so bear with me.  I do believe though that it works well enough to do some basic data aggregation for you.</p>
+	<p>Hey there, my name is Christian and I am the guy who made the Dataserf.  First off, I should point out that this site is in its early stages, so bear with me.  I do believe though that it works well enough to do some basic data aggregation for you.</p>
 	<p>Before we get rockin', let me explain some terms I'm going to use.  When you analyze your data, you usually have it organized in a spreadsheet that you put into SPSS or R or something.  But before that happens, you need to organize all your individual subject files, average all the values, maybe changing the labels of some of your conditions or adjusting things like reaction or whatever.  This usually manifests itself as a whole pile a bitchwork a smart person like yourself shouldn't have to deal with.  That's where I come in.  Basically, we're going to put your data into a storage unit called a <em>table</em>.  In general you can think of each table as a place to hold data from all your subjects for a given experiment.  The other term you know is the <em>variable</em>.  Basically what a variable is what is what's in a column in your spreadsheet.  So this might be your reaction time data, accuracy, or your experimental conditions.  The last term I'm going to use is <em>database</em> - that's basically the thing that holds all your tables (and within the tables, your variables).</p>
 
 	<h3>Upload</h3>
@@ -227,7 +227,8 @@ template = Template("""
 	<p>Pretty simple, huh?</p>
 
 	<h3>Download</h3>
-	<p>Here's the really magical part.  Just check off the variables you want to see in your file and you're off to the races.  Right now the file you'll get is one suitable for SPSS (where each participant's data is on a separate row).  They take a bit to make, but any files you create can be downloaded later on.</p> 
+	<p>Here's the really magical part.  Just check off the variables you want to see in your file and you're off to the races.  Right now the file you'll get is one suitable for SPSS (where each participant's data is on a separate row).  They take a bit to make, but any files you create can be downloaded later on.</p>
+	<p>Also, you have the option of including only certain values from your table.  You can specify this like you did in the 'Modify' section.</p>
 	<br/>
 	<p>And that's about it.  Click on the links below to get started.</p>
 </%def>

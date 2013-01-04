@@ -43,7 +43,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#">datamaster</a>
+          <a class="brand" href="#">dataserf</a>
           <div class="nav-collapse">
             <ul class="nav">
               <li class="active"><a href="${domain}">Home</a></li>
