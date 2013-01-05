@@ -15,10 +15,16 @@ def parseQuery(kwargs):
 	key = kwargs['if_var']
 	cond = kwargs['if']
 
-	if cond == '==':
-		q = {key : value}
+	if value and key and cond:
+
+		if cond == '==':
+			q = {key : value}
+		else:
+			subcond = {qdict[cond] : value}
+			q = {key : subcond}
+
 	else:
-		subcond = {qdict[cond] : value}
-		q = {key : subcond}
+		
+		q = {}
 
 	return q

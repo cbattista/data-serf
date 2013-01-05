@@ -107,24 +107,26 @@ class download(object):
 				elif k in DVs:
 					dvs.append(k)
 
-		#measures, groupBy, condition, dbName, table
 		q = parseQuery(kwargs)
-
-		print q
 
 		w = mt.WriteTable(dvs, ivs, q, "datamaster", datatable, subject=sid, maxSD=None)
 
 		w.Compute()
 		w.WriteForSPSS()
+		w.WriteForR()
 
-		fname = w.name + ".csv"
+		spss_name = w.name + ".csv"
+		r_name = w.name + ".dat"
 
 		up = mt.MongoAdmin("datamaster").db["user_files"].posts
 
-		if not up.find_one({'user':u, 'fname':fname}):
-			up.insert({'user':u, 'fname':fname})
+		if not up.find_one({'user':u, 'fname':spss_name}):
+			up.insert({'user':u, 'fname':spss_name})
 
-		output += "<p>Your data is ready.  <a href='http://www.christianbattista.com/output/%s'>Click to download</a>.</p>" % (fname)
+		if not up.find_one({'user':u, 'fname':r_name}):
+			up.insert({'user':u, 'fname':r_name})
+
+		output += "<p>Your data is ready.  <a href='%s/output/%s'>Click here for SPSS format</a> or <a href='%s/output/%s'>click here  for R format.</p>" % (domain, spss_name, domain, r_name)
 		return output
 
 if __name__ == '__main__':
