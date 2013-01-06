@@ -214,7 +214,7 @@ template = Template("""
 	   <img src='${domain}/serf.png' align='right' />
 		<h1>dataserf</h1>
        <p>The dataserf provides digital labor for behavioral scientists.  Upload your raw data files from programs like E-Prime and format them so they're ready for use in a stats program like SPSS or R.</p>
-        <p><a class="btn btn-primary btn-large" href="${lc}">Learn more &raquo;</a></p>
+        <p><a class="btn btn-inverse btn-large" href="${lc}">Learn more &raquo;</a></p>
 
 </%def>
 

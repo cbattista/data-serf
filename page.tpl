@@ -82,7 +82,7 @@
 	      <div class="thumbnail" id="upload-small">
           <h2>upload</h2>
            <p>Upload some files or review the ones you've already uploaded.</p>
-          <p><a class="btn" href="${urls[1]}">Upload some files.&raquo;</a></p>
+          <a class="btn" href="${urls[1]}">Upload some files.&raquo;</a>
 		  </div>
         </li>
 
@@ -90,7 +90,7 @@
 		  <div class="thumbnail" id="manage-small">
           <h2>manage</h2>
            <p>Identify the variables you are interested in.</p>
-          <p><a class="btn" href="${urls[2]}">Manage your data &raquo;</a></p>
+          <a class="btn" href="${urls[2]}">Manage your data &raquo;</a>
 		  </div>
        </li>
 
@@ -98,7 +98,7 @@
 		  <div class="thumbnail" id="modify-small">
           <h2>modify</h2>
            <p>Edit your variables and create new ones.</p>
-          <p><a class="btn" type="button" href="${urls[3]}">Modify your data &raquo;</a></p>
+          <a class="btn" type="button" href="${urls[3]}">Modify your data &raquo;</a>
 		  </div>
        </li>
 
@@ -106,7 +106,7 @@
 		  <div class="thumbnail" id="download-small">
           <h2>download</h2>
           <p>Aggregate your data and download it.</p>
-          <p><a class="btn" href="${urls[4]}">Download some files &raquo;</a></p>
+          <a class="btn" href="${urls[4]}">Download some files &raquo;</a>
 		  </div>
         </li>
 
