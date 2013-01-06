@@ -45,12 +45,12 @@ template = Template("""
 	</%def>
 
 <%def name = "form(data, form_action, btntext)">
-	<fieldset>
 	%if form_action:
 		<form action="${form_action}">
 	%else:
 		<form>
 	%endif
+	<fieldset>
 	${data}
 	<br/>
 	%if btntext:
@@ -58,12 +58,25 @@ template = Template("""
 	%else:
 		<button type="submit" class="btn">Submit</button>
 	%endif
-	</form>
 	</fieldset>
-	</%def>
+	</form>
+</%def>
+
+<%def name = "radiobuttons(buttons, name, checkbox)">
+	%for button in buttons:
+	<label class="radio">
+		%if (buttons.index(button) + 1) == checkbox:
+			<input type="radio" name="${name}" value="${button}" checked='checked'>
+		%else:
+			<input type="radio" name="${name}" value="${button}">
+		%endif
+		${button}
+	</label>
+	%endfor
+</%def>
 
 <%def name = "condition(var_options, label)">
-	<em>${label}</em>
+	<label><em>${label}</em></label>
 	<select name='if_var'>
 	<option></option>
 	%for vo in var_options:
@@ -251,6 +264,10 @@ template = Template("""
 </%def>
 
 """)
+
+def getRadios(buttons, name="", check=0):
+	output = template.get_def("radiobuttons").render(buttons=buttons, name=name, checkbox=check)
+	return output
 
 def getCheckbox(myList, br=False):
 	output = ""
