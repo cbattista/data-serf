@@ -197,13 +197,15 @@ template = Template("""
 	</div>
 </%def>
 
-<%def name="index_content(lc)">
+<%def name="index_content(lc, domain)">
+	   <img src='${domain}/serf.png' align='right' />
+		<h1>dataserf</h1>
        <p>The dataserf provides digital labor for behavioral scientists.  Upload your raw data files from programs like E-Prime and format them so they're ready for use in a stats program like SPSS or R.</p>
         <p><a class="btn btn-primary btn-large" href="${lc}">Learn more &raquo;</a></p>
 
 </%def>
 
-<%def name='learn_content()'>
+<%def name='learn_content(domain)'>
 	<p>Greetings Lords and Ladies, my name is Christian and I am the guy who made the dataserf.  The dataserf is in its early stages, but I do believe though that it works well enough to perform some basic labours, including data modification and aggregration, for you.</p>
 	<p>When you analyze your data, you usually have it organized in a spreadsheet that you put into SPSS or R or something.  But before that happens, you need to organize all your individual subject files, average all the values, maybe changing the labels of some of your conditions or adjusting variables like reaction time.  This usually manifests itself as a whole pile of repetitive tasks that you don't want to do.</p>
 	<p>The dataserf was built to do these tasks for you.  It will put your data into a storage unit called a <em>table</em>.  Each table is a place to hold data from all your subjects for a given experiment.</p>
@@ -263,11 +265,11 @@ def getCondition(var_options, label=""):
 	return output
 
 def getLearnContent():
-	output = template.get_def("learn_content").render()
+	output = template.get_def("learn_content").render(domain=domain)
 	return output
 
 def getIndexContent():
-	output = template.get_def("index_content").render(lc=learn_url)
+	output = template.get_def("index_content").render(lc=learn_url, domain=domain)
 	return output
 
 def getAccordion(items, startIndex=0, contentID=""):
