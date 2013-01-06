@@ -98,7 +98,7 @@
 		  <div class="thumbnail" id="modify-small">
           <h2>modify</h2>
            <p>Edit your variables and create new ones.</p>
-          <p><a class="btn" href="${urls[3]}">Modify your data &raquo;</a></p>
+          <p><a class="btn" type="button" href="${urls[3]}">Modify your data &raquo;</a></p>
 		  </div>
        </li>
 

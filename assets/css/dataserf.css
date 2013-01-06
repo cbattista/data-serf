@@ -5,6 +5,7 @@
 	padding: 30px;
 	padding-top: 20px;
 	padding-bottom:20px;
+	background-color: white;
 	
 }
 
@@ -22,6 +23,7 @@ label {
   font-weight: 180;
   line-height: 22px;
   color: inherit;
+ 
 }
 
 #upload-small, #manage-small, #modify-small, #download-small {
@@ -85,7 +87,14 @@ h1 {
 }
 
 
+.brand {
+	font-family: 'Rye', cursive;
+}
 
+.nav {
+	font-size: 14pt;
+	font-family: 'Gentium Book Basic', serif;
+}
 
 h2, h3{
 	
@@ -107,4 +116,5 @@ a.accordion-toggle {
 .accordion-heading {
 	background-color: #EEEEEE;
 }
+
 
