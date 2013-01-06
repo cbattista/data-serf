@@ -3,6 +3,14 @@
 
 .thumbnail {
 	padding: 30px;
+	padding-top: 20px;
+	padding-bottom:20px;
+	
+}
+
+.hero-unit {
+	padding-top: 40px;
+	padding-bottom: 40px;
 }
 
 #upload-small, #manage-small, #modify-small, #download-small {
@@ -55,7 +63,21 @@
 	border-color: #CCCCEE;
 }
 
+h{
+	color:#333333;
+}
 
+h1 {
+	font-family: 'Rye', cursive;
+}
+
+
+
+
+h2, h3{
+	
+font-family: 'Gentium Book Basic', serif;
+}
 .accordion-group {
 	background-color: #FFFFFF;
 }

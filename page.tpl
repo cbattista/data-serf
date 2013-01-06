@@ -20,6 +20,8 @@
     </style>
     <link href="${domain}/assets/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="${domain}/assets/css/dataserf.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Gentium+Book+Basic|Rye' rel='stylesheet' type='text/css'>
+
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -47,7 +49,7 @@
           <a class="brand" href="#">dataserf</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="${domain}">Home</a></li>
+              <li class="active"><a href="${urls[0]}">Home</a></li>
               <li><a href="${urls[5]}">About</a></li>
 			%if user:
 			  <li><a href="#">Logged in as ${user}</a></li>
