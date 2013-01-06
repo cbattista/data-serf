@@ -1,14 +1,37 @@
+"""
+the dataserf - a digital laborer for behavioral scientists
+Copyright (C) 2013 Christian Battista
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
 from mako.template import Template
 import cherrypy
 from config import *
 
-def getPage(data, title="", contentID=""):
+
+def getPage(data, title="", contentID="", static=False):
 	page_tpl = Template(filename="page.tpl")
-	if cherrypy.user:
-		name = cherrypy.user.name
-		output = page_tpl.render(data=data, title=title, user=name, main_url=main_url, urls=urls, domain=domain, contentID=contentID)
-	else:
-		output = page_tpl.render(data=data, title=title, user=None, main_url=main_url, urls=urls, domain=domain, contentID=contentID)
+	
+	user = None
+
+	if not static:
+		if cherrypy.user:
+			user = cherrypy.user.name
+
+	output = page_tpl.render(data=data, title=title, user=user, main_url=main_url, urls=urls, domain=domain, contentID=contentID)
+	
 	return output
 
 no_table = "<p>You must select a table before performing this action.  <a href='%s'>Click here to select a table</a>.</p>" % manage_url
@@ -29,6 +52,7 @@ def prettyList(l):
 template = Template("""
 <%def name = "table(data, title)">
 	<div class="table">
+	<table>
 	%if title:
 		<h3>${title}</h3>
 	%endif
@@ -41,7 +65,6 @@ template = Template("""
 		</tr>
 	%endfor
 	</table>
-	</div>
 	</%def>
 
 <%def name = "form(data, form_action, btntext)">
@@ -264,6 +287,7 @@ template = Template("""
 </%def>
 
 """)
+
 
 def getRadios(buttons, name="", check=0):
 	output = template.get_def("radiobuttons").render(buttons=buttons, name=name, checkbox=check)

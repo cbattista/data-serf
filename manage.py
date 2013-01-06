@@ -1,3 +1,21 @@
+"""
+the dataserf - a digital laborer for behavioral scientists
+Copyright (C) 2013 Christian Battista
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
 import os
 import mt
 from config import *
@@ -79,19 +97,19 @@ class manage(object):
 
 		output = "<p>Which variables are you most interested in?  Use the radio buttons to indicate which variables are independent (IV) or dependent (DV).  You also should tell us which variables are the trial and subject info. </p>"""
 
-		output += "<h3>table %s</h3>" % table
+		output += "<p>table: <em>%s</em><p>" % table
 
 		table_data = []
 
 		for h in headers:
 			row = [h]
 			for value in ['IV', 'DV', 'subject', 'trial', 'none']:
-				inp = "<input type = 'radio' name = '%s' value = '%s'/>%s" % (h, value, value)
+				inp = "<label class='radio'><input type = 'radio' name = '%s' value = '%s'/>%s</label>" % (h, value, value)
 				var = var_posts.find_one({'name':h})
 				if var:
 					var_type = var['var_type']
 					if var_type == value:
-						inp = "<input type = 'radio' name = '%s' value = '%s' checked='checked'/>%s" % (h, value, value)
+						inp = "<label class='radio'><input type = 'radio' name = '%s' value = '%s' checked='checked'/>%s</label>" % (h, value, value)
 				row.append(inp)
 			table_data.append(row)
 		

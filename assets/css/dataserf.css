@@ -29,6 +29,10 @@ label {
 #upload-small, #manage-small, #modify-small, #download-small {
 }
 
+table, ul {
+	font-size: 16px;
+}
+
 #upload, #manage, #modify, #download {
  	border: 1px solid #DDDDDD;
 	padding-right: 0px;
