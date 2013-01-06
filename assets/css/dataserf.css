@@ -119,4 +119,9 @@ a.accordion-toggle {
 	background-color: #EEEEEE;
 }
 
-
+footer {
+	color: #AAAAAA;
+	text-align: center;
+	font-size: 12pt;
+	font-family: 'Gentium Book Basic', serif;
+}

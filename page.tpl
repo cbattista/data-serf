@@ -73,7 +73,7 @@
 		<div id="content">${data}</div>
       </div>
 
-      <hr>
+
 
 
 	    <div class="row-fluid">
@@ -113,6 +113,7 @@
    	  </ul>
       </div>
 
+	  <hr>
       <footer>
         <p>&copy; 2012 Christian Battista's dataserf</p>
       </footer>
