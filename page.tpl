@@ -20,7 +20,7 @@
     </style>
     <link href="${domain}/assets/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="${domain}/assets/css/dataserf.css" rel="stylesheet">
-	<link href='http://fonts.googleapis.com/css?family=Gentium+Book+Basic|Rye' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Gentium+Book+Basic|Rye|UnifrakturCook:700' rel='stylesheet' type='text/css'>
 
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->

@@ -13,7 +13,6 @@ class FileDemo(object):
 	auth = lg_authority.AuthRoot()
 	auth__doc = "The object that serves authentication pages"
 
-
 	#Allow everyone to see the index page
 
 	@cherrypy.expose
@@ -141,8 +140,8 @@ class FileDemo(object):
 			for other_row in uf.find({'user' : cherrypy.user.name, 'table': t}):
 				l.append(other_row['file_name'])
 
-			form = "<h3>Select any files you wish to remove from your database</h3>"
-			inp = "<input type = 'text' name = 'table_remove' value='%s' style = 'visibility:hidden'></input><br/>" % t
+			form = "<p>Select any files you wish to remove from your database</p>"
+			inp = "<input type = 'text' name = 'table_remove' value='%s' style = 'visibility:hidden'></input>" % t
 			form += getForm(inp + getCheckbox(l), upload_url, btn_text="Remove")			
 
 			items.append([t, form])

@@ -35,13 +35,20 @@ class manage(object):
 
 		form = "<p>Select the table that you want to work with</p>"
 		
+		radios = []
+		count = 0
+		check = 0
 
 		for row in p.find({'user':cherrypy.user.name}):
+			count += 1
 			if table == row['table']:
-				form += "<input type='radio' name='table' value='%s' checked='checked'>%s</input><br/>" % (row['table'], row['table'])
-			else:
-				form += "<input type='radio' name='table' value='%s'>%s</input><br/>" % (row['table'], row['table'])
+				check = count
 
+			radios.append(row['table'])
+
+		name = 'table'
+
+		form = getRadios(radios, name, check)
 
 		select_table = getForm(form, manage_url)
 
