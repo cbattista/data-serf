@@ -45,7 +45,7 @@ class download(object):
 		dl = "<p>"
 		fcount = 1
 		for row in up.find({'user':u}):
-			dl += "File %s : <a href='%s/output/%s'>%s</a><br/>" % (fcount, main_url, row['fname'], row['fname'])
+			dl += "File %s : <a href='%s/output/%s'>%s</a><br/>" % (fcount, domain, row['fname'], row['fname'])
 			fcount+=1
 		dl += "</p>"
 
@@ -126,7 +126,7 @@ class download(object):
 		if not up.find_one({'user':u, 'fname':r_name}):
 			up.insert({'user':u, 'fname':r_name})
 
-		output += "<p>Your data is ready.  <a href='%s/output/%s'>Click here for SPSS format</a> or <a href='%s/output/%s'>click here  for R format.</p>" % (main_url, spss_name, main_url, r_name)
+		output += "<p>Your data is ready.  <a href='%s/output/%s'>Click here for SPSS format</a> or <a href='%s/output/%s'>click here  for R format.</p>" % (domain, spss_name, domain, r_name)
 		return output
 
 if __name__ == '__main__':
