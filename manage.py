@@ -82,6 +82,7 @@ class manage(object):
 
 	def chooseVars(self, table):
 		cherrypy.response.cookie['datamaster_table'] = table
+		cherrypy.response.cookie['datamaster_table']['path'] = '/'
 
 		tableName = "%s_%s" % (table, cherrypy.user.name)
 
