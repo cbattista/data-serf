@@ -100,6 +100,7 @@ class upload(object):
 			table = kwargs['table']
 		
 		cherrypy.response.cookie['datamaster_table'] = table
+		cherrypy.response.cookie['datamaster_table']['path'] = '/'
 
 		output = ""
 
