@@ -50,7 +50,7 @@
           <div class="nav-collapse">
             <ul class="nav">
               <li class="active"><a href="${urls[0]}">home</a></li>
-              <li><a href="${urls[5]}">About</a></li>
+              <li><a href="${urls[5]}">about</a></li>
 			%if user:
 			  <li><a href="#">${user}</a></li>
 			  <li><a href="${urls[0]}/auth/logout">logout</a></li>
