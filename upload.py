@@ -106,12 +106,12 @@ class upload(object):
 
 		output +=  """
 			<p>
-			<form action="%s" method="post" enctype="multipart/form-data">
+			<form method="post" enctype="multipart/form-data">
 			<input type="file" name="myFiles" multiple="multiple"/><br />
 			<input type="submit"/>
 			</form>
 			</p>
-		""" % upload_url
+		"""
 		return output
 
 	def upload(self, myFiles):
