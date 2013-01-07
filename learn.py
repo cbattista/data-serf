@@ -26,6 +26,8 @@ import lg_authority
 
 class learn(object):
 
+        auth = lg_authority.AuthRoot()
+        auth__doc = "The object that serves authentication pages"
 
 	@cherrypy.expose
 	def index(self):
