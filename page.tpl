@@ -46,14 +46,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#">dataserf</a>
+          <a class="brand" href="${urls[0]}">dataserf</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="${urls[0]}">Home</a></li>
+              <li class="active"><a href="${urls[0]}">home</a></li>
               <li><a href="${urls[5]}">About</a></li>
 			%if user:
-			  <li><a href="#">Logged in as ${user}</a></li>
-			  <li><a href="auth/logout">Logout</a></li>
+			  <li><a href="#">${user}</a></li>
+			  <li><a href="${urls[0]}/auth/logout">logout</a></li>
 			%endif
             </ul>
           </div><!--/.nav-collapse -->

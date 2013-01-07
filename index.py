@@ -23,6 +23,8 @@ import cherrypy
 from mako_defs import *
 from config import *
 import lg_authority
+import upload, manage, modify, download, learn
+
 
 class index(object):
 
@@ -40,10 +42,16 @@ class index(object):
 
 		return output 
 
-
 if __name__ == '__main__':
 
-	cherrypy.config.update({'server.socket_port':index_port})
+	#cherrypy.config.update({'server.socket_port':index_port})
 	cherrypy.config.update(cherry_settings)
-	cherrypy.quickstart(index())
+	
+	index = index()
+	index.upload = upload.upload()
+	index.manage = manage.manage()
+	index.modify = modify.modify()
+	index.download = download.download()
+	index.learn = learn.learn()
+	cherrypy.quickstart(index)
 

@@ -28,10 +28,6 @@ from client import *
 
 @lg_authority.groups('auth')
 class download(object):
-	"""CherryPy server root"""
-
-	auth = lg_authority.AuthRoot()
-	auth__doc = "The object that serves authentication pages"
 
 	@cherrypy.expose
 	def index(self, **kwargs):

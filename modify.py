@@ -9,11 +9,6 @@ from mako_defs import *
 
 @lg_authority.groups('auth')
 class modify(object):
-        """CherryPy server root"""
-
-        auth = lg_authority.AuthRoot()
-        auth__doc = "The object that serves authentication pages"
-
 
 	@cherrypy.expose
 	def index(self, **kwargs):

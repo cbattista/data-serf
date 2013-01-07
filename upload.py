@@ -25,11 +25,7 @@ from mako_defs import *
 from config import *
 
 @lg_authority.groups('auth')
-class FileDemo(object):
-	"""CherryPy server root"""
-
-	auth = lg_authority.AuthRoot()
-	auth__doc = "The object that serves authentication pages"
+class upload(object):
 
 	#Allow everyone to see the index page
 
@@ -172,5 +168,5 @@ if __name__ == '__main__':
 
 	cherrypy.config.update({'server.socket_port':upload_port})
 	cherrypy.config.update(cherry_settings)
-	cherrypy.quickstart(FileDemo())
+	cherrypy.quickstart(upload())
 

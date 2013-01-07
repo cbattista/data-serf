@@ -19,25 +19,26 @@ from mako_defs import *
 from config import *
 import cherrypy
 
-d = {}
-d['50x'] = """<h3>attempting to perform a labour</h3><h2>that he could not perform</h2>"""
- 
-d['403'] = """<h3>attempting to walk a path</h3><h2>which was forbidden to him</h2>"""
-d['404'] = """<h3>attempting to find a place</h3><h2>which did not exist</h2>"""
+def make_pages():
+	d = {}
+	d['50x'] = """<h3>attempting to perform a labour</h3><h2>that he could not perform</h2>"""
+	 
+	d['403'] = """<h3>attempting to walk a path</h3><h2>which was forbidden to him</h2>"""
+	d['404'] = """<h3>attempting to find a place</h3><h2>which did not exist</h2>"""
 
-for page in ['50x', '403', '404']:
+	for page in ['50x', '403', '404']:
 
-	f = open('%s.html' % page, 'w')
+		f = open('%s.html' % page, 'w')
 
-	img = """
-		<img src='%s/fallen_serf.png' align='right'/>
-		<h1>oh my</h1>
-		<h3>he has fallen</h3>
-		%s
-	""" % (domain, d[page])
+		img = """
+			<img src='%s/fallen_serf.png' align='right'/>
+			<h1>oh my</h1>
+			<h3>he has fallen</h3>
+			%s
+		""" % (domain, d[page])
 
-	pageContent = getPage(img, '', static=True)
+		pageContent = getPage(img, '', static=True)
 
-	f.write(pageContent)
+		f.write(pageContent)
 
-f.close()
+	f.close()
