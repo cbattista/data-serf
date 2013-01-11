@@ -253,7 +253,7 @@ template = Template("""
 
 	<div class="thumbnail" id="upload-small">
 	<h2>upload</h2>
-	<p>If you've just started using the dataserf, the first thing you need to do is create a table for your data to be stored in.  Then you select the files you want to upload.  At this point, the dataserf can handle those weird .txt files that E-Prime spits out and also any .csv files that have titles for the columns.  Don't try to upload those .edat type files though, that won't work (use the weird .txt files instead).  The dataserf can also handle comma separated.  The dataserf will assume that files like this have a trial's worth of data on each row, and that the first row contains the column labels.</p>
+	<p>If you've just started using the dataserf, the first thing you need to do is create a table for your data to be stored in.  Then you select the files you want to upload.  At this point, the dataserf can handle those weird .txt files that E-Prime spits out and also any .csv files that have titles for the columns.  Don't try to upload those .edat type files though, that won't work (use the weird .txt files instead).  The dataserf can also handle comma separated value files (e.g., .csv files).  The dataserf will assume that .csv files have a trial's worth of data on each row, and that the first row contains the column labels.</p>
 	<p>Once you've selected your files, you can upload them (it may take a bit for them to upload, usually I have to wait about a minute for 40 files to get onto the server).</p>
 	<p>When the files have uploaded, you can review them and make sure they all uploaded.  Later on if you decide you want to remove some of them from the table, you can go to the review section to pull some out.</p>
 	</div>	
@@ -282,7 +282,7 @@ template = Template("""
 	<p>Also, you have the option of including only certain values from your table.  You can specify this like you did in the 'Modify' section.</p>
 	<br/>
 	</div>
-	<p>And that's about it.  Click on the links below to get started.</p>
+	<p>And that's about it.  Click on the links below to get started (hint:  if this is your first time on the site, start in the upload section).</p>
 </%def>
 
 """)
