@@ -33,6 +33,14 @@ def getPage(data, title="", contentID="", static=False):
 	output = page_tpl.render(data=data, title=title, user=user, main_url=main_url, urls=urls, domain=domain, contentID=contentID)
 	
 	return output
+
+def getLogin():
+	page_tpl = Template(filename='login.tpl')
+
+	output = page_tpl.render(domain=domain, main_url=main_url, urls=urls)
+
+	return output
+
 no_table = "<p>You must select a table before performing this action.  <a href='%s'>Click here to select a table</a>.</p>" % manage_url
 
 def getSuccess(data):

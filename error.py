@@ -42,3 +42,11 @@ def make_pages():
 		f.write(pageContent)
 
 	f.close()
+
+def make_login():
+	f = open("login.html", 'w')
+	content = getLogin() 
+	f.write(content)
+	f.close()
+
+make_login()
