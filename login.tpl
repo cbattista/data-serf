@@ -18,12 +18,6 @@
 
     <!-- Le styles -->
     <link href="${domain}/assets/css/bootstrap.css" rel="stylesheet">
-    <style type="text/css">
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
-    </style>
     <link href="${domain}/assets/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="${domain}/assets/css/dataserf.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Gentium+Book+Basic|Rye|UnifrakturCook:700' rel='stylesheet' type='text/css'>
@@ -71,7 +65,6 @@
 
       <!-- Main hero unit for a primary marketing message or call to action -->
 	  <div class="hero-unit">
-        <h1>dataserf login</h1>
 		<div id="content">{children}</div>
       </div>
 
