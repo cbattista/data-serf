@@ -133,45 +133,43 @@ class modify(object):
 	def query(self, table, kwargs):
 		posts = mt.MongoAdmin("datamaster").db[table].posts
 
-		qdict={}
-		qdict['>='] = '$gte'
-		qdict['>'] = '$gt'
-		qdict['<='] = '$lte'
-		qdict['<'] = '$lt'
+		condition = parseCondition(kwargs)
 
-		#get the condition
-		if kwargs['if_text']:
-			if_val = mt.StringToType(kwargs['if_text'])
-			if kwargs['if'] == '==':
-				condition = {kwargs['if_var'] : if_val}
+		set_text = kwargs['set_text']
+		set_val = kwargs['set_val']
+		set_op = kwargs['set_op']
+		set_col = kwargs['set_col']
+
+		if (set_text or set_val) and set_op:
+
+			if set_val:
+				for row in posts.find(condition):
+					if row.has_key(set_col) and row.has_key(set_val):
+						row[set_col] = row[set_val]
+						posts.save(row)
+
+				query = "set %s %s %s" % (set_col, set_op, set_val)
+
 			else:
-				subcond = {qdict[kwargs['if']] : if_val}
-				condition = {kwargs['if_var'] : subcond}
+				
+				query = {}
+
+				st = mt.StringToType(kwargs['set_text'])
+
+				if kwargs['set_op'] == '=':
+					query = {'$set' : {kwargs['set_col'] : st}}
+				elif kwargs['set_op'] == '+=':
+					query = { '$inc': { kwargs['set_col']: st}}
+				elif kwargs['set_op'] == '-=':
+					query = { '$inc': { kwargs['set_col']: -st}}
+
+				posts.update(condition, query, multi=True)
+
+			text = "variable %s was modified, condition: %s  command: %s" % (kwargs['set_col'], condition, query)
+			return getAlert(text, "good")
 
 		else:
-			condition = {}
-
-		query = {}
-
-		print kwargs.keys()
-
-		if kwargs['set_text'] and kwargs['set_op']:
-			st = mt.StringToType(kwargs['set_text'])
-			if kwargs['set_op'] == '=':
-				query = {'$set' : {kwargs['set_col'] : st}}
-			elif kwargs['set_op'] == '+=':
-				query = { '$inc': { kwargs['set_col']: st}}
-			elif kwargs['set_op'] == '-=':
-				query = { '$inc': { kwargs['set_col']: -st}}
-		print kwargs		
-
-		print condition, query
-
-		if query:
-			posts.update(condition, query, multi=True)
-			return "<div class='alert alert-success'>variable %s was modified, condition: %s  command: %s</div>" % (kwargs['set_col'], condition, query)
-		else:
-			return "<div class='alert alert-error'>no modifications</div>"
+			return getAlert("No modifications made")
 		
 
 

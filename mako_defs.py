@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from mako.template import Template
 import cherrypy
 from config import *
-
+import mt
 
 def getPage(data, title="", contentID="", static=False):
 	page_tpl = Template(filename="page.tpl")
@@ -114,6 +114,7 @@ template = Template("""
 
 <%def name = "setter(var_options, label, number)">
 	<label><em>${label}</em></label>
+
 	<select name='set_col${number}'>
 	<option/>
 	%for vo in var_options:
@@ -126,11 +127,20 @@ template = Template("""
 		<option>+=</option>
 		<option>-=</option>
 	</select>
+	<select name='set_val${number}'>
+	<option/>
+	%for vo in var_options:
+		<option>${vo}</option>
+	%endfor
+	</select>
+	or 
 	<input type='text' name = 'set_text${number}' />
+
 </%def>
 
 <%def name = "condition(var_options, label, number)">
 	<label><em>${label}</em></label>
+
 	<select name='if_var${number}'>
 	<option></option>
 	%for vo in var_options:
@@ -293,9 +303,32 @@ def getCheckbox(myList, br=False):
 			output += "<br/>"
 	return output
 
+
 def getCondition(var_options, label="", ID=""):
 	output = template.get_def("condition").render(var_options=var_options, label=label, number=ID)
 	return output
+
+def parseCondition(kwargs):
+	qdict={}
+	qdict['>='] = '$gte'
+	qdict['>'] = '$gt'
+	qdict['<='] = '$lte'
+	qdict['<'] = '$lt'
+
+	#get the condition
+	if kwargs['if_text']:
+		if_val = mt.StringToType(kwargs['if_text'])
+		if kwargs['if'] == '==':
+			condition = {kwargs['if_var'] : if_val}
+		else:
+			subcond = {qdict[kwargs['if']] : if_val}
+			condition = {kwargs['if_var'] : subcond}
+
+	else:
+		condition = {}
+
+	return condition
+
 
 def getSetter(var_options, label="", ID=""):
 	output = template.get_def("setter").render(var_options=var_options, label=label, number=ID)
