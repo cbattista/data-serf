@@ -151,7 +151,7 @@ template = Template("""
 
 <%def name = "create_column(var_options)">
 	<legend>create a new variable</legend>
-	<label><em>Name</em> (required)
+	<label><em>Name</em> (required)</label>
 	<input type='text' name='new_var'>
 	<select name='new_var_type'>
 		<option>IV</option>
@@ -159,8 +159,7 @@ template = Template("""
 		<option>subject</option>
 		<option>trial</option>
 	</select>
-	</label>
-	<label><em>From</em> (optional)
+	<label><em>From</em> (optional)</label>
 	<select name='orig_var'>
 	<option></option>
 	%for vo in var_options:
@@ -173,12 +172,11 @@ template = Template("""
 		<option>-=</option>
 	</select>
 	<input type='text' name='op_text' />
-	</label>
 </%def>
 
 <%def name = "merge_column(var_options)">
 	<legend>merge two variables into a new variable</legend>
-	<label><em>Name</em> (required)
+	<label><em>Name</em> (required)</label>
 	<input type='text' name='merge_var'> 
 	<select name='merge_var_type'>
 		<option>IV</option>
@@ -186,8 +184,7 @@ template = Template("""
 		<option>subject</option>
 		<option>trial</option>
 	</select>
-	</label>
-	<label><em>Source variables</em> (required)
+	<label><em>Source variables</em> (required)</label>
 	<select name='var_left'>
 	<option></option>
 	%for vo in var_options:
@@ -209,7 +206,6 @@ template = Template("""
 		<option>${vo}</option>
 	%endfor
 	</select>
-	</label>
 </%def>
 
 <%def name = "accordion(items, startIndex, contentID)">
