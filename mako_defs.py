@@ -74,7 +74,7 @@ template = Template("""
 	</table>
 	</%def>
 
-<%def name = "form(data, form_action, btntext, legend)">
+<%def name = "form(data, form_action, btntext, legend, hidden)">
 	%if form_action:
 		<form action="${form_action}">
 	%else:
@@ -331,6 +331,6 @@ def getTable(data, title=""):
 	output = template.get_def("table").render(data=data, title=title)
 	return output
 
-def getForm(data, form_action="", btn_text = "", legend = ""):
-	output = template.get_def("form").render(data=data, form_action=form_action, btntext=btn_text, legend=legend)
+def getForm(data, form_action="", btn_text = "", legend = "", hidden=[]):
+	output = template.get_def("form").render(data=data, form_action=form_action, btntext=btn_text, legend=legend, hidden=hidden)
 	return output

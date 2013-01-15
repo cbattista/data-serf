@@ -25,6 +25,7 @@ import cherrypy
 import lg_authority
 from mako_defs import *
 from client import *
+import zipfile
 
 @lg_authority.groups('auth')
 class download(object):
@@ -73,7 +74,7 @@ class download(object):
 
 		
 
-		items = [['aggregate', aggregate], ['download raw files', download_raw], ["download existing file", dl]]
+		items = [['aggregate', aggregate], ['create single subject files', download_raw], ["download existing file", dl]]
 
 		output += getAccordion(items, contentID='download-small')
 
@@ -97,10 +98,10 @@ class download(object):
 		form += getCheckbox(IVs)
 		form += getCheckbox(DVs)
 
-		form += getCondition(IVs + DVs, 'Include only data where:', ['dl':'agg'])
+		form += getCondition(IVs + DVs, 'Include only data where:')
 
 
-		output += getForm(form, download_url)
+		output += getForm(form, download_url, hidden=['dl', 'agg'])
 
 		
 		return output
@@ -157,7 +158,7 @@ class download(object):
 		tableName = "%s_%s_vars" % (table, cherrypy.user.name)
 		posts = mt.MongoAdmin("datamaster").db[tableName].posts
 
-		output = "<p>Here are the variables you have labelled.  Select the ones you want to combine into your new files.  You will get one file for each subject you have.</p>"
+		output = "<p>You will get one file for each subject you have.</p>"
 
 		sid = posts.find_one({'var_type': 'subject'})['name']
 		trial = posts.find_one({'var_type': 'trial'})['name']
@@ -167,13 +168,9 @@ class download(object):
 
 		form = ""
 
-		form += getCheckbox(IVs)
-		form += getCheckbox(DVs)
+		form += getCondition([trial] + IVs + DVs, 'Include only data where:')
 
-		form += getCondition(IVs + DVs, 'Include only data where:', ['dl','raw'])
-
-
-		output += getForm(form, download_url)
+		output += getForm(form, download_url, hidden=['dl','raw'])
 
 		return output
 
@@ -181,6 +178,8 @@ class download(object):
 		u = cherrypy.user.name
 		datatable = "%s_%s" % (table, u)
 		tableName = "%s_%s_vars" % (table, u)
+
+		print kwargs
 
 		dm = mt.MongoAdmin("datamaster")
 
@@ -191,14 +190,40 @@ class download(object):
 		IVs = posts.find({'var_type': 'IV'}).distinct('name')
 		DVs = posts.find({'var_type': 'DV'}).distinct('name')
 
-		output = ""
-
 		q = parseQuery(kwargs)
 
-		sids = posts.find().distinct(sid)
+		output = ""
+
+		sids = dm.db[datatable].posts.find().distinct(sid)
+
+		print sids
+
+		files = []
 
 		for sub in sids:
-			dm.write(datatable, dict(q, **{sid:sub}), headers = [sid, trial] + IVs + DVs)
+			name = dm.write(datatable, dict(q, **{sid:sub}), headers = [sid, trial] + IVs + DVs, sort=trial)
+			files.append(name)
+
+		zipname = datatable
+
+		
+
+		#if q:
+		#	zipname += "_%s" % mt.dictString(q)
+
+		zipname = os.path.join("output", zipname + ".zip")
+
+		z = zipfile.ZipFile(zipname, 'w')
+			
+		for f in files:
+			z.write(f + ".csv")
+			os.system('rm %s.csv' % f)
+
+		z.close()
+
+		output = getAlert("Your files are ready.  <a href='%s/%s'>Click here to download.</a>" % (domain, zipname), "good")
+
+		return output
 
 if __name__ == '__main__':
 #Turn on lg_authority for our website
