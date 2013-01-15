@@ -6,6 +6,7 @@ from config import *
 import cherrypy
 import lg_authority
 from mako_defs import *
+import random
 
 @lg_authority.groups('auth')
 class modify(object):
@@ -24,6 +25,7 @@ class modify(object):
 
 			posts = mt.MongoAdmin("datamaster").db[tableName].posts
 
+			preview = self.preview(datatable, tableName)
 
 			if kwargs.has_key('set_op'):
 				output += self.query(datatable, kwargs)
@@ -47,12 +49,37 @@ class modify(object):
 			modify = no_table
 			create = no_table
 			merge = no_table
-	
-		items = [['create', create], ['merge', merge], ['modify', modify]]
+			preview = no_table
+
+		items = [['create', create], ['merge', merge], ['modify', modify], ['preview', preview]]
 
 		output += getAccordion(items, contentID='modify-small')
 
 		return getPage(output, "modify", "modify")
+
+	def preview(self, table, var_table):
+		dm = mt.MongoAdmin("datamaster")
+
+		VARs = mt.MongoAdmin("datamaster").db[var_table].posts
+
+		sid = VARs.find_one({'var_type': 'subject'})['name']
+		trial = VARs.find_one({'var_type': 'trial'})['name']
+		IVs = VARs.find({'var_type': 'IV'}).distinct('name')
+		DVs = VARs.find({'var_type': 'DV'}).distinct('name')
+
+		output = ""
+
+		sids = dm.db[table].posts.find().distinct(sid)
+
+		sub = sids[0]
+
+		print sub
+
+		lines = dm.write(table, {sid:sub}, headers = [sid, trial] + IVs + DVs, sort=trial, output="list")
+
+		table = getTable(lines, 'Subject %s' % sub)
+
+		return table
 
 
 	def create(self, table, kwargs):
@@ -144,9 +171,20 @@ class modify(object):
 
 			if set_val:
 				for row in posts.find(condition):
-					if row.has_key(set_col) and row.has_key(set_val):
-						row[set_col] = row[set_val]
-						posts.save(row)
+					print set_col, row.has_key(set_col), set_val, row.has_key(set_val)
+					if row.has_key(set_val):
+						if set_op == '=':
+							print set_col, set_val
+							row[set_col] = row[set_val]
+							posts.save(row)
+						elif set_op == '+=':
+							if row.has_key(set_col):
+								row[set_col] += row[set_val]
+								posts.save(row)
+						elif set_op == '-=':
+							if row.has_key(set_col):
+								row[set_col] -= row[set_val]
+								posts.save(row)
 
 				query = "set %s %s %s" % (set_col, set_op, set_val)
 
