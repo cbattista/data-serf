@@ -49,12 +49,20 @@ class download(object):
 
 			if posts.find_one({'var_type':'subject'}):
 				aggregate = self.agg(table)
+				download_raw = self.raw(table)
 			else:
 				aggregate = "<p>You need to select a subject variable, <a href='%s'>go to the manage page</a>  to do this.</p>" % manage_url 
-			if kwargs:
-				output += self.aggregate(table, kwargs)
+				download_raw = "<p>You need to select a subject variable, <a href='%s'>go to the manage page</a>  to do this.</p>" % manage_url
+
+			if kwargs.has_key('dl'):
+				if kwargs['dl'] == 'agg':
+					output += self.aggregate(table, kwargs)
+				else:
+					output += self.get_raw(table, kwargs)
+
 		else:
 			aggregate = no_table
+			download_raw = no_table
 
 		dl = "<p>"
 		fcount = 1
@@ -63,7 +71,9 @@ class download(object):
 			fcount+=1
 		dl += "</p>"
 
-		items = [['make new file', aggregate], ["download existing file", dl]]
+		
+
+		items = [['aggregate', aggregate], ['download raw files', download_raw], ["download existing file", dl]]
 
 		output += getAccordion(items, contentID='download-small')
 
@@ -74,7 +84,7 @@ class download(object):
 		tableName = "%s_%s_vars" % (table, cherrypy.user.name)
 		posts = mt.MongoAdmin("datamaster").db[tableName].posts
 
-		output = "<p>Here are the variables you have labelled.  Select the ones you want to combine into your new file.</p>"
+		output = "<p>Here are the variables you have labelled.  Select the ones you want to combine into your new file.  You will get a single file with each subject's average DV(s) for each IV(s).</p>"
 
 		sid = posts.find_one({'var_type': 'subject'})['name']
 		trial = posts.find_one({'var_type': 'trial'})['name']
@@ -87,7 +97,7 @@ class download(object):
 		form += getCheckbox(IVs)
 		form += getCheckbox(DVs)
 
-		form += getCondition(IVs + DVs, 'Include only data where:')
+		form += getCondition(IVs + DVs, 'Include only data where:', ['dl':'agg'])
 
 
 		output += getForm(form, download_url)
@@ -142,6 +152,53 @@ class download(object):
 
 		output += "<p>Your data is ready.  <a href='%s/output/%s'>Click here for SPSS format</a> or <a href='%s/output/%s'>click here  for R format.</p>" % (domain, spss_name, domain, r_name)
 		return output
+
+	def raw(self, table):
+		tableName = "%s_%s_vars" % (table, cherrypy.user.name)
+		posts = mt.MongoAdmin("datamaster").db[tableName].posts
+
+		output = "<p>Here are the variables you have labelled.  Select the ones you want to combine into your new files.  You will get one file for each subject you have.</p>"
+
+		sid = posts.find_one({'var_type': 'subject'})['name']
+		trial = posts.find_one({'var_type': 'trial'})['name']
+
+		IVs = posts.find({'var_type': 'IV'}).distinct('name')
+		DVs = posts.find({'var_type': 'DV'}).distinct('name')
+
+		form = ""
+
+		form += getCheckbox(IVs)
+		form += getCheckbox(DVs)
+
+		form += getCondition(IVs + DVs, 'Include only data where:', ['dl','raw'])
+
+
+		output += getForm(form, download_url)
+
+		return output
+
+	def get_raw(self, table, kwargs):
+		u = cherrypy.user.name
+		datatable = "%s_%s" % (table, u)
+		tableName = "%s_%s_vars" % (table, u)
+
+		dm = mt.MongoAdmin("datamaster")
+
+		posts = mt.MongoAdmin("datamaster").db[tableName].posts
+
+		sid = posts.find_one({'var_type': 'subject'})['name']
+		trial = posts.find_one({'var_type': 'trial'})['name']
+		IVs = posts.find({'var_type': 'IV'}).distinct('name')
+		DVs = posts.find({'var_type': 'DV'}).distinct('name')
+
+		output = ""
+
+		q = parseQuery(kwargs)
+
+		sids = posts.find().distinct(sid)
+
+		for sub in sids:
+			dm.write(datatable, dict(q, **{sid:sub}), headers = [sid, trial] + IVs + DVs)
 
 if __name__ == '__main__':
 #Turn on lg_authority for our website

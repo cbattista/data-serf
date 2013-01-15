@@ -84,6 +84,9 @@ template = Template("""
 	%if legend:
 		<legend>${legend}</legend>
 	%endif
+	%if hidden:	
+		<input type="hidden" name="${hidden[0]}" value="${hidden[1]}">
+	%endif
 	${data}
 	<br/>
 	%if btntext:
