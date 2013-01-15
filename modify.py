@@ -35,7 +35,10 @@ class modify(object):
 	
 			keys = posts.find().distinct('name')
 
-			modify = getForm(template.get_def("modify").render(var_options=keys), modify_url)
+			condition = getCondition(var_options=keys, label='If (optional)')
+			setter = getSetter(var_options=keys, label='Set (required)')
+
+			modify = getForm(condition + setter, modify_url, legend='transform a variable')
 
 			create = getForm(template.get_def("create_column").render(var_options=keys), modify_url)
 
@@ -75,7 +78,7 @@ class modify(object):
 			else:
 				posts.update({}, {'$set':{name : 'NA'}})
 	
-			output = "<div class='alert alert-success'>variable %s created</div>" % name
+			output = getAlert("variable %s created" % name, "good")
 
 			#make a note of this new column
 			tableName = "%s_vars" % table
@@ -83,7 +86,7 @@ class modify(object):
 			var_posts.update({'name':name}, {'$set':{'var_type':var_type}}, upsert=True)
 
 		else:
-			output = "<div class='alert alert-error'>no columns created</div>"
+			output = getAlert("no columns created")
 
 		return output
 

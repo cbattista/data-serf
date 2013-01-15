@@ -74,13 +74,16 @@ template = Template("""
 	</table>
 	</%def>
 
-<%def name = "form(data, form_action, btntext)">
+<%def name = "form(data, form_action, btntext, legend)">
 	%if form_action:
 		<form action="${form_action}">
 	%else:
 		<form>
 	%endif
 	<fieldset>
+	%if legend:
+		<legend>${legend}</legend>
+	%endif
 	${data}
 	<br/>
 	%if btntext:
@@ -105,15 +108,33 @@ template = Template("""
 	%endfor
 </%def>
 
-<%def name = "condition(var_options, label)">
+
+<%def name = "setter(var_options, label, number)">
 	<label><em>${label}</em></label>
-	<select name='if_var'>
+	<select name='set_col${number}'>
+	<option/>
+	%for vo in var_options:
+		<option>${vo}</option>
+	%endfor
+	</select>
+	<select name='set_op${number}'>
+		<option></option>
+		<option>=</option>
+		<option>+=</option>
+		<option>-=</option>
+	</select>
+	<input type='text' name = 'set_text${number}' />
+</%def>
+
+<%def name = "condition(var_options, label, number)">
+	<label><em>${label}</em></label>
+	<select name='if_var${number}'>
 	<option></option>
 	%for vo in var_options:
 		<option>${vo}</option>
 	%endfor
 	</select>
-	<select name='if'>
+	<select name='if${number}'>
 		<option/>
 		<option>==</option>
 		<option>!=</option>
@@ -122,46 +143,11 @@ template = Template("""
 		<option><=</option>
 		<option><</option>
 	</select>
-	<input type='text' name='if_text' />
-</%def>
-
-<%def name = "modify(var_options)">
-	<h2>transform an existing variable</h2>
-	<label><em>If</em> (optional)
-	<select name='if_var'>
-	<option></option>
-	%for vo in var_options:
-		<option>${vo}</option>
-	%endfor
-	</select>
-	<select name='if'>
-		<option/>
-		<option>==</option>
-		<option>>=</option>
-		<option>></option>
-		<option><=</option>
-		<option><</option>
-	</select>
-	<input type='text' name='if_text' />
-	</label>
-	<label><em>Set</em> (required)
-	<select name='set_col'>
-	<option/>
-	%for vo in var_options:
-		<option>${vo}</option>
-	%endfor
-	</select>
-	<select name='set_op'>
-		<option/>
-		<option>=</option>
-		<option>+=</option>
-		<option>-=</option>
-	</select>
-	<input type='text' name = 'set_text' /></label>
+	<input type='text' name='if_text${number}' />
 </%def>
 
 <%def name = "create_column(var_options)">
-	<h2>create a new variable</h2>
+	<legend>create a new variable</legend>
 	<label><em>Name</em> (required)
 	<input type='text' name='new_var'>
 	<select name='new_var_type'>
@@ -188,7 +174,7 @@ template = Template("""
 </%def>
 
 <%def name = "merge_column(var_options)">
-	<h2>merge two variables into a new variable</h2>
+	<legend>merge two variables into a new variable</legend>
 	<label><em>Name</em> (required)
 	<input type='text' name='merge_var'> 
 	<select name='merge_var_type'>
@@ -308,8 +294,12 @@ def getCheckbox(myList, br=False):
 			output += "<br/>"
 	return output
 
-def getCondition(var_options, label=""):
-	output = template.get_def("condition").render(var_options=var_options, label=label)
+def getCondition(var_options, label="", ID=""):
+	output = template.get_def("condition").render(var_options=var_options, label=label, number=ID)
+	return output
+
+def getSetter(var_options, label="", ID=""):
+	output = template.get_def("setter").render(var_options=var_options, label=label, number=ID)
 	return output
 
 def getLearnContent():
@@ -324,10 +314,20 @@ def getAccordion(items, startIndex=0, contentID=""):
 	output = template.get_def("accordion").render(items=items, startIndex=startIndex, contentID=contentID)
 	return output
 
+def getAlert(text, status='bad'):
+	if status == 'bad':
+		alert = 'alert alert-error'
+	elif status == 'good':
+		alert = 'alert alert-success'
+	else:
+		alert = 'alert'
+
+	return '<div class="%s">%s</div>' % (alert, text)
+
 def getTable(data, title=""):
 	output = template.get_def("table").render(data=data, title=title)
 	return output
 
-def getForm(data, form_action="", btn_text = ""):
-	output = template.get_def("form").render(data=data, form_action=form_action, btntext=btn_text)
+def getForm(data, form_action="", btn_text = "", legend = ""):
+	output = template.get_def("form").render(data=data, form_action=form_action, btntext=btn_text, legend=legend)
 	return output
