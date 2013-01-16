@@ -27,15 +27,26 @@ def getVariables(table, sids=False):
 	dm = mt.MongoAdmin("datamaster")
 	VARs = mt.MongoAdmin("datamaster").db[var_table].posts
 
-	sid = VARs.find_one({'var_type': 'subject'})['name']
-	trial = VARs.find_one({'var_type': 'trial'})['name']
-	IVs = VARs.find({'var_type': 'IV'}).distinct('name')
-	DVs = VARs.find({'var_type': 'DV'}).distinct('name')
+	output = [False, False, False, False, False]
 
-	output = [sid, trial, IVs, DVs]
+	sid = VARs.find_one({'var_type': 'subject'})
+	if sid:
+		output[0] = sid['name']
 
-	if sids:
-		sids = dm.db[table].posts.find().distinct(sid)
-		output.append(sids)
+	trial = VARs.find_one({'var_type': 'trial'})
+	if trial:
+		output[1] = trial['name']
+
+	IVs = VARs.find({'var_type': 'IV'})
+	if IVs:
+		output[2] = IVs.distinct('name')
+
+	DVs = VARs.find({'var_type': 'DV'})	
+	if DVs:
+		output[3] = DVs.distinct('name')
+
+	if sid and sids:
+		sids = dm.db[table].posts.find().distinct(sid['name'])
+		output[4] = sids
 
 	return output
