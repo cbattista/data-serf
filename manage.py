@@ -22,6 +22,7 @@ from config import *
 import cherrypy
 import lg_authority
 from mako_defs import *
+import common
 
 @lg_authority.groups('auth')
 class manage(object):
@@ -123,6 +124,7 @@ class manage(object):
 		if cookie.has_key("datamaster_table"):
 	
 			table = cookie["datamaster_table"].value
+			datatable = "%s_%s" % (table, cherrypy.user.name)
 			tableName = "%s_%s_vars" % (table, cherrypy.user.name)
 			posts = mt.MongoAdmin("datamaster").db[tableName].posts
 
@@ -132,30 +134,26 @@ class manage(object):
 					posts.update({'name':k}, {'$set':{'var_type':kwargs[k]}}, upsert=True)
 
 
-
-			sid = posts.find_one({'var_type': 'subject'})
-			trial = posts.find_one({'var_type': 'trial'})
-
-			IVs = posts.find({'var_type': 'IV'}).distinct('name')
-			DVs = posts.find({'var_type': 'DV'}).distinct('name')
+			sid, trial, IVs, DVs, sids = common.getVariables(datatable)
 
 			output = ""
 
 			if sid or trial or IVs or DVs:
-				output += "<p>Here are the variables you have labelled:</p>"
+				output += "<p>Here are the variables you have chosen:</p>"
 
 				output += "<ul>"
 				if sid:
-					output += "<li>subject: %s</li>" % sid['name']
+					output += "<li>subject: %s</li>" % sid
 				if trial:
-					output += "<li>trial: %s</li>" % trial['name']
+					output += "<li>trial: %s</li>" % trial
 				if IVs:
 					output += "<li>IVs: %s</li>" % prettyList(IVs)
 				if DVs:
 					output += "<li>DVs: %s</li>" % prettyList(DVs)
 				output += "</ul>"
+
 			else:
-				output += "<p>You have no variables selected yet.</p>"
+				output += "<p>You have no variables chosen yet.</p>"
 
 
 		else:
