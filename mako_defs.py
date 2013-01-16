@@ -138,6 +138,22 @@ template = Template("""
 
 </%def>
 
+<%def name="options(options, label, ID, active)">
+	%if ID:
+		<select name='op-${ID}'>
+	%else:
+		<select name='op'>
+	%endif
+	%for o in options:
+		%if active == o:
+			<option selected='selected'>${o}</option>
+		%else:
+			<option>${o}</option>
+		%endif
+	%endfor
+	</select>
+</%def>	
+
 <%def name = "condition(var_options, label, number)">
 	<label><em>${label}</em></label>
 
@@ -329,6 +345,9 @@ def parseCondition(kwargs):
 
 	return condition
 
+def getOptions(options, label="", ID="", active=""):
+	output = template.get_def("options").render(options=options, label=label, ID=ID, active=active)
+	return output
 
 def getSetter(var_options, label="", ID=""):
 	output = template.get_def("setter").render(var_options=var_options, label=label, number=ID)

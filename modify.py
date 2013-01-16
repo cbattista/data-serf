@@ -6,7 +6,6 @@ from config import *
 import cherrypy
 import lg_authority
 from mako_defs import *
-import random
 
 @lg_authority.groups('auth')
 class modify(object):
@@ -25,7 +24,7 @@ class modify(object):
 
 			posts = mt.MongoAdmin("datamaster").db[tableName].posts
 
-			preview = self.preview(datatable, tableName)
+			preview = self.preview(datatable, tableName, kwargs)
 
 			if kwargs.has_key('set_op'):
 				output += self.query(datatable, kwargs)
@@ -57,7 +56,8 @@ class modify(object):
 
 		return getPage(output, "modify", "modify")
 
-	def preview(self, table, var_table):
+	def preview(self, table, var_table, kwargs):
+
 		dm = mt.MongoAdmin("datamaster")
 
 		VARs = mt.MongoAdmin("datamaster").db[var_table].posts
@@ -66,20 +66,23 @@ class modify(object):
 		trial = VARs.find_one({'var_type': 'trial'})['name']
 		IVs = VARs.find({'var_type': 'IV'}).distinct('name')
 		DVs = VARs.find({'var_type': 'DV'}).distinct('name')
-
-		output = ""
-
 		sids = dm.db[table].posts.find().distinct(sid)
-
-		sub = sids[0]
-
-		print sub
+		
+		if kwargs.has_key('op-preview'):
+			sub = int(kwargs['op-preview'])
+		else:
+			sub = sids[0]
 
 		lines = dm.write(table, {sid:sub}, headers = [sid, trial] + IVs + DVs, sort=trial, output="list")
-
 		table = getTable(lines, 'Subject %s' % sub)
 
-		return table
+
+		output = "<p>If you just modified your data you might need to <a class='btn' href=%s>refresh the preview</a> to see the results.</p>" % modify_url
+		output += "<p>or switch the participant to:</p>" 
+		output += getForm(getOptions(sids, ID="preview", active=sub), form_action=modify_url)
+		output += table
+
+		return output
 
 
 	def create(self, table, kwargs):
