@@ -26,6 +26,7 @@ import lg_authority
 from mako_defs import *
 from client import *
 import zipfile
+import common
 
 @lg_authority.groups('auth')
 class download(object):
@@ -82,43 +83,27 @@ class download(object):
 
 
 	def agg(self, table):
-		tableName = "%s_%s_vars" % (table, cherrypy.user.name)
-		posts = mt.MongoAdmin("datamaster").db[tableName].posts
-
-		output = "<p>Here are the variables you have labelled.  Select the ones you want to combine into your new file.  You will get a single file with each subject's average DV(s) for each IV(s).</p>"
-
-		sid = posts.find_one({'var_type': 'subject'})['name']
-		trial = posts.find_one({'var_type': 'trial'})['name']
-
-		IVs = posts.find({'var_type': 'IV'}).distinct('name')
-		DVs = posts.find({'var_type': 'DV'}).distinct('name')
+		"""aggregate interface
+		table(string)
+		"""
+		datatable = "%s_%s" % (table, cherrypy.user.name)
+		sid, trial, IVs, DVs, sids = common.getVariables(datatable, sids=False)
 
 		form = ""
-
 		form += getCheckbox(IVs)
 		form += getCheckbox(DVs)
+		form += getCondition(IVs + DVs + [trial], 'Include only data where:')
 
-		form += getCondition(IVs + DVs, 'Include only data where:')
-
-
+		output = "<p>Here are the variables you have labelled.  Select the ones you want to combine into your new file.  You will get a single file with each subject's average DV(s) for each IV(s).</p>"
 		output += getForm(form, download_url, hidden=['dl', 'agg'])
 
-		
 		return output
 
 
 	def aggregate(self, table, kwargs):
 		u = cherrypy.user.name
 		datatable = "%s_%s" % (table, u)
-		tableName = "%s_%s_vars" % (table, u)
-
-		posts = mt.MongoAdmin("datamaster").db[tableName].posts
-
-		sid = posts.find_one({'var_type': 'subject'})['name']
-		trial = posts.find_one({'var_type': 'trial'})['name']
-
-		IVs = posts.find({'var_type': 'IV'}).distinct('name')
-		DVs = posts.find({'var_type': 'DV'}).distinct('name')
+		sid, trial, IVs, DVs, sids = common.getVariables(datatable, sids=False)
 
 		output = ""
 
@@ -155,49 +140,31 @@ class download(object):
 		return output
 
 	def raw(self, table):
-		tableName = "%s_%s_vars" % (table, cherrypy.user.name)
-		posts = mt.MongoAdmin("datamaster").db[tableName].posts
-
-		output = "<p>You will get one file for each subject you have.</p>"
-
-		sid = posts.find_one({'var_type': 'subject'})['name']
-		trial = posts.find_one({'var_type': 'trial'})['name']
-
-		IVs = posts.find({'var_type': 'IV'}).distinct('name')
-		DVs = posts.find({'var_type': 'DV'}).distinct('name')
+		"""Raw data interface
+		table(string)
+		"""
+		datatable = "%s_%s" % (table, cherrypy.user.name)
+		sid, trial, IVs, DVs, sids = common.getVariables(datatable, sids=False)
 
 		form = ""
-
 		form += getCondition([trial] + IVs + DVs, 'Include only data where:')
 
+		output = "<p>You will get one file for each subject you have.</p>"
 		output += getForm(form, download_url, hidden=['dl','raw'])
 
 		return output
 
 	def get_raw(self, table, kwargs):
+		"""Print the raw data (csv format) and put data in a zip file for download
+		table(string) - name of table to pull the vars from
+		kwargs - optional query info
+		"""
 		u = cherrypy.user.name
 		datatable = "%s_%s" % (table, u)
-		tableName = "%s_%s_vars" % (table, u)
-
-		print kwargs
-
 		dm = mt.MongoAdmin("datamaster")
-
-		posts = mt.MongoAdmin("datamaster").db[tableName].posts
-
-		sid = posts.find_one({'var_type': 'subject'})['name']
-		trial = posts.find_one({'var_type': 'trial'})['name']
-		IVs = posts.find({'var_type': 'IV'}).distinct('name')
-		DVs = posts.find({'var_type': 'DV'}).distinct('name')
+		sid, trial, IVs, DVs, sids = common.getVariables(datatable, sids=True)
 
 		q = parseQuery(kwargs)
-
-		output = ""
-
-		sids = dm.db[datatable].posts.find().distinct(sid)
-
-		print sids
-
 		files = []
 
 		for sub in sids:
@@ -205,14 +172,7 @@ class download(object):
 			files.append(name)
 
 		zipname = datatable
-
-		
-
-		#if q:
-		#	zipname += "_%s" % mt.dictString(q)
-
 		zipname = os.path.join("output", zipname + ".zip")
-
 		z = zipfile.ZipFile(zipname, 'w')
 			
 		for f in files:
