@@ -6,6 +6,7 @@ from config import *
 import cherrypy
 import lg_authority
 from mako_defs import *
+import common
 
 @lg_authority.groups('auth')
 class modify(object):
@@ -24,7 +25,7 @@ class modify(object):
 
 			posts = mt.MongoAdmin("datamaster").db[tableName].posts
 
-			preview = self.preview(datatable, tableName, kwargs)
+			preview = self.preview(datatable, kwargs)
 
 			if kwargs.has_key('set_op'):
 				output += self.query(datatable, kwargs)
@@ -56,10 +57,11 @@ class modify(object):
 
 		return getPage(output, "modify", "modify")
 
-	def preview(self, table, var_table, kwargs):
+	def preview(self, table, kwargs):
 
 		dm = mt.MongoAdmin("datamaster")
 
+		"""
 		VARs = mt.MongoAdmin("datamaster").db[var_table].posts
 
 		sid = VARs.find_one({'var_type': 'subject'})['name']
@@ -68,6 +70,11 @@ class modify(object):
 		DVs = VARs.find({'var_type': 'DV'}).distinct('name')
 		sids = dm.db[table].posts.find().distinct(sid)
 		
+		"""
+
+		sid, trial, IVs, DVs, sids = common.getVariables(table, sids=True)
+
+
 		if kwargs.has_key('op-preview'):
 			sub = int(kwargs['op-preview'])
 		else:
