@@ -72,6 +72,7 @@ template = Template("""
 		</tr>
 	%endfor
 	</table>
+	</div>
 	</%def>
 
 <%def name = "form(data, form_action, btntext, legend, hidden)">
