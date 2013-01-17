@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import mt
 import cherrypy
+import datetime
 
 def getVariables(table, sids=False):
 	var_table = "%s_vars" % table
@@ -51,20 +52,22 @@ def getVariables(table, sids=False):
 
 	return output
 
-def activity_log(page, action, table):
+def activity_log(page, action, table, kwargs={}):
 	"""Make an entry into the activity log
 	page(string) - one of upload, download, manage, modify
-	action(string) - page function
-	kwargs(dicts) - kwargs from the page (e.g., the user's parameters)
+	action(string) - specific function on the page that was used
 	table(string) - the table that was acted upon
+	kwargs(dict) - kwargs from the page (e.g., the user's parameters)
+
 	"""
 	user = cherrypy.user.name
 	posts = mt.MongoAdmin("datamaster").getTable('history').posts	
+	row = {}
 	row['page'] = page
 	row['table'] = table
 	row['user'] = user
 	row['action'] = action
-	row['t'] = datetime.datetime.utcnow()
+	row['datetime'] = datetime.datetime.utcnow()
 
-	posts.insert(row)
-	posts.save()
+	posts.save(row)
+

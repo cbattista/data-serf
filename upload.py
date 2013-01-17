@@ -23,6 +23,7 @@ import cherrypy
 import lg_authority
 from mako_defs import *
 from config import *
+import common
 
 @lg_authority.groups('auth')
 class upload(object):
@@ -93,6 +94,8 @@ class upload(object):
 				posts.remove({'source_file':k})
 				ul_files.remove({'file_name':k})
 
+		common.activity_log('upload', 'remove', table, kwargs)
+
 	def select(self, kwargs):
 		if kwargs['table'] == 'new':
 			table = kwargs['new_table']
@@ -112,6 +115,9 @@ class upload(object):
 			</form>
 			</p>
 		"""
+		common.activity_log('upload', 'select', table, kwargs)
+
+
 		return output
 
 	def upload(self, myFiles):
@@ -140,6 +146,8 @@ class upload(object):
 			uf.insert({'user':cherrypy.user.name, 'table':tableName, 'file_name' : myFile.filename})
 
 		output += "</p>"
+	
+		common.activity_log('upload', 'upload', table, kwargs)
 
 		return output
 
