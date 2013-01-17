@@ -50,3 +50,21 @@ def getVariables(table, sids=False):
 		output[4] = sids
 
 	return output
+
+def activity_log(page, action, table):
+	"""Make an entry into the activity log
+	page(string) - one of upload, download, manage, modify
+	action(string) - page function
+	kwargs(dicts) - kwargs from the page (e.g., the user's parameters)
+	table(string) - the table that was acted upon
+	"""
+	user = cherrypy.user.name
+	posts = mt.MongoAdmin("datamaster").getTable('history').posts	
+	row['page'] = page
+	row['table'] = table
+	row['user'] = user
+	row['action'] = action
+	row['t'] = datetime.datetime.utcnow()
+
+	posts.insert(row)
+	posts.save()
