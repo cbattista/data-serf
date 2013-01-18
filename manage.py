@@ -82,6 +82,8 @@ class manage(object):
 		return output
 
 	def chooseVars(self, table):
+		"""Choose variables interface
+		"""
 		cherrypy.response.cookie['datamaster_table'] = table
 		cherrypy.response.cookie['datamaster_table']['path'] = '/'
 
@@ -120,6 +122,8 @@ class manage(object):
 		return output
 	
 	def reviewVars(self, kwargs):
+		"""review variables interface
+		"""
 		cookie = cherrypy.request.cookie
 		if cookie.has_key("datamaster_table"):
 	
@@ -133,6 +137,8 @@ class manage(object):
 					posts.remove({'name':k})
 					posts.update({'name':k}, {'$set':{'var_type':kwargs[k]}}, upsert=True)
 
+
+				common.activity_log("manage", "choose", table, kwargs)
 
 			sid, trial, IVs, DVs, sids = common.getVariables(datatable)
 

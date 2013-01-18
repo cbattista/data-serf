@@ -68,6 +68,7 @@ def activity_log(page, action, table, kwargs={}):
 	row['user'] = user
 	row['action'] = action
 	row['datetime'] = datetime.datetime.utcnow()
+	row['kwargs'] = kwargs
 
 	posts.save(row)
 

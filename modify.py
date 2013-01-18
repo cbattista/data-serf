@@ -108,6 +108,8 @@ class modify(object):
 	
 			output = getAlert("variable %s created" % name, "good")
 
+			common.activity_log("modify", "create", table, kwargs)
+
 			#make a note of this new column
 			tableName = "%s_vars" % table
 			var_posts = mt.MongoAdmin("datamaster").db[tableName].posts
@@ -148,6 +150,8 @@ class modify(object):
 					row[name] = str(row[var_l]) + "_" + str(row[var_r])
 					posts.save(row)
 					
+			common.activity_log("modify", "merge", table, kwargs)
+
 			#make a note of this new column
 			tableName = "%s_vars" % table
 			var_posts = mt.MongoAdmin("datamaster").db[tableName].posts
@@ -203,6 +207,8 @@ class modify(object):
 					query = { '$inc': { kwargs['set_col']: -st}}
 
 				posts.update(condition, query, multi=True)
+
+			common.activity_log("modify", "modify", table, kwargs)
 
 			text = "variable %s was modified, condition: %s  command: %s" % (kwargs['set_col'], condition, query)
 			return getAlert(text, "good")

@@ -136,6 +136,8 @@ class download(object):
 		if not up.find_one({'user':u, 'fname':r_name}):
 			up.insert({'user':u, 'fname':r_name})
 
+		common.activity_log("download", "aggregate", table, kwargs)
+
 		output += "<p>Your data is ready.  <a href='%s/output/%s'>Click here for SPSS format</a> or <a href='%s/output/%s'>click here  for R format.</p>" % (domain, spss_name, domain, r_name)
 		return output
 
@@ -180,6 +182,8 @@ class download(object):
 			os.system('rm %s.csv' % f)
 
 		z.close()
+
+		common.activity_log("download", "download raw", table, kwargs)
 
 		output = getAlert("Your files are ready.  <a href='%s/%s'>Click here to download.</a>" % (domain, zipname), "good")
 

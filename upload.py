@@ -94,7 +94,7 @@ class upload(object):
 				posts.remove({'source_file':k})
 				ul_files.remove({'file_name':k})
 
-		common.activity_log('upload', 'remove', table, kwargs)
+				common.activity_log('upload', 'remove', table, {'filename': k})
 
 	def select(self, kwargs):
 		if kwargs['table'] == 'new':
@@ -115,8 +115,6 @@ class upload(object):
 			</form>
 			</p>
 		"""
-		common.activity_log('upload', 'select', table, kwargs)
-
 
 		return output
 
@@ -147,7 +145,7 @@ class upload(object):
 
 		output += "</p>"
 	
-		common.activity_log('upload', 'upload', table, kwargs)
+		common.activity_log('upload', 'upload', table)
 
 		return output
 
