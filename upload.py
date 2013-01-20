@@ -145,7 +145,7 @@ class upload(object):
 
 		output += "</p>"
 	
-		common.activity_log('upload', 'upload', table)
+		common.activity_log('upload', 'upload', tableName)
 
 		return output
 

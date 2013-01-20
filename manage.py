@@ -29,43 +29,25 @@ class manage(object):
 
 	@cherrypy.expose
 	def index(self, **kwargs):
-		u = cherrypy.user.name
-		posts = mt.MongoAdmin("datamaster").db["tables"].posts
-		p = mt.MongoAdmin("datamaster").db["user_tables"].posts
+
 		cookie = cherrypy.request.cookie
 
 		review_vars = self.reviewVars(None)
 
-		if kwargs:
-			if len(kwargs.keys()) > 1:
-				review_vars = self.reviewVars(kwargs)
-
-		if kwargs.has_key('table'):
-			table = kwargs['table']
+		if kwargs.has_key('select'):
+			table = kwargs['select']
 		else:
 			if cookie.has_key('datamaster_table'):
 				table = cookie["datamaster_table"].value
 			else:
 				table = None
 
-		form = "<p>Select the table that you want to work with</p>"
-		
-		radios = []
-		count = 0
-		check = 0
+		select_table, remove_table = self.table_choice(table, kwargs)
 
-		for row in p.find({'user':cherrypy.user.name}):
-			count += 1
-			if table == row['table']:
-				check = count
 
-			radios.append(row['table'])
-
-		name = 'table'
-
-		form = getRadios(radios, name, check)
-
-		select_table = getForm(form, manage_url)
+		if kwargs:
+			if len(kwargs.keys()) > 1:
+				review_vars = self.reviewVars(kwargs)
 
 		if table:
 			choose_vars = self.chooseVars(table)
@@ -73,13 +55,62 @@ class manage(object):
 			choose_vars = no_table
 
 
-		items = [['select table', select_table], ['choose variables', choose_vars], ['review variables', review_vars]]
+		items = [['select table', select_table], ['choose variables', choose_vars], ['review variables', review_vars], ['remove table', remove_table]]
 
 		accordion = getAccordion(items, contentID='manage-small')
 
 		output = getPage(accordion, "manage", "manage")
 
 		return output
+
+	def table_choice(self, table, kwargs):
+		"""choose table interface
+		"""
+
+		u = cherrypy.user.name
+		posts = mt.MongoAdmin("datamaster").db["tables"].posts
+		p = mt.MongoAdmin("datamaster").db["user_tables"].posts
+		
+		#remove any tables
+		if kwargs.has_key('remove'):
+			cookie = cherrypy.request.cookie
+			cookie_table = cookie["datamaster_table"].value
+
+			print "removing %s" % (kwargs['remove'])
+			t = kwargs['remove']
+
+			if cookie_table == t:
+				print "removin"
+				cookie["datamaster_table"] = t
+				cookie["datamaster_table"]["path"] = "/"
+				cookie["datamaster_table"]["expires"] = 0
+
+			mt.MongoAdmin("datamaster").db.drop_collection("%s_%s.posts" % (t, u))
+			mt.MongoAdmin("datamaster").db.drop_collection("%s_%s_vars.posts" % (t, u))
+			p.remove({'user':u, 'table':t})
+			mt.MongoAdmin("datamaster").db["user_ul_files"].posts.remove({'user':u, 'table':t})
+			common.activity_log('manage', 'remove table', t, kwargs)
+
+		radios = []
+		count = 0
+		check = 0
+
+		for row in p.find({'user':u}):
+			count += 1
+			if table == row['table']:
+				check = count
+
+			radios.append(row['table'])
+
+		form = getRadios(radios, 'select', check)
+
+		select_table = getForm(form, manage_url, legend = 'Select the table that you want to work with')
+
+		form = getRadios(radios, 'remove')
+
+		remove_table = getForm(form, manage_url, legend = 'Remove the selected table')
+
+		return select_table, remove_table
 
 	def chooseVars(self, table):
 		"""Choose variables interface
