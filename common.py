@@ -54,15 +54,23 @@ def getVariables(table, sids=False):
 
 def getCookie(name):
 	cookie = cherrypy.request.cookie
+	cookie = cherrypy.request.cookie
+		
 	if cookie.has_key(name):
-		return cookie[name]
+		value = cookie[name].value
+		return value
 	else:
 		return None
+
+def setCookie(name, value):
+	cherrypy.response.cookie[name] = value
+	cherrypy.response.cookie[name]['path'] = '/'
+
 
 def removeCookie(name, value):
 	cherrypy.response.cookie[name] = value
 	cherrypy.response.cookie[name]['path'] = '/'
-	cherrypy.response.cookie[name]["expires"] = 0
+	cherrypy.response.cookie[name]['expires'] = 0
 
 def activity_log(page, action, table, kwargs={}):
 	"""Make an entry into the activity log

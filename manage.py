@@ -39,25 +39,27 @@ class manage(object):
 		if kwargs.has_key('select'):
 			table = kwargs['select']
 			print "selecting %s" % table
-			self.setTable(table)
+			common.setCookie('datamaster_table', table)
 			select_table, remove_table = self.table_choice(table, kwargs)
 			choose_vars = self.chooseVars(table)
 
 		#remove any tables
 		elif kwargs.has_key('remove'):
+			print "removing %s" % (kwargs['remove'])
+
 			p = mt.MongoAdmin("datamaster").db["user_tables"].posts
-			cookie = cherrypy.request.cookie
 
 			#is there a cookie?
-			cookie_table = getCookie("datamaster_table")
+			cookie_table = common.getCookie("datamaster_table")
 
-			print "removing %s" % (kwargs['remove'])
+			print cookie_table
+
 			t = kwargs['remove']
 
 			if cookie_table == t:
 				print "removing %s cookie " % cookie_table
 
-				removeCookie('datamaster_table', cookie_table)
+				common.removeCookie('datamaster_table', cookie_table)
 
 				select_table, remove_table = self.table_choice(None, kwargs)
 				choose_vars = no_table
@@ -78,11 +80,11 @@ class manage(object):
 			
 
 		else:
-			if cookie.has_key('datamaster_table'):
-				table = cookie["datamaster_table"].value
+			table = common.getCookie('datamaster_table')
+
+			if table:
 				choose_vars = self.chooseVars(table)
 			else:
-				table = None
 				choose_vars = no_table
 
 			select_table, remove_table = self.table_choice(table, kwargs)
@@ -128,10 +130,6 @@ class manage(object):
 
 		return select_table, remove_table
 
-	def setTable(self, table):
-		cherrypy.response.cookie['datamaster_table'] = table
-		cherrypy.response.cookie['datamaster_table']['path'] = '/'
-
 	def chooseVars(self, table):
 		"""Choose variables interface
 		"""
@@ -142,7 +140,7 @@ class manage(object):
 
 		var_posts = mt.MongoAdmin("datamaster").db["%s_vars" % tableName].posts
 
-		print "start"
+		print "choosing vars"
  
 		try:
 			headers = mt.GetKeys(posts)
