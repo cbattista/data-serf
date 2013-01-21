@@ -31,8 +31,9 @@ class manage(object):
 	def index(self, **kwargs):
 
 		cookie = cherrypy.request.cookie
-
 		review_vars = self.reviewVars(None)
+
+		u = cherrypy.user.name
 
 		#select any tables
 		if kwargs.has_key('select'):
@@ -42,6 +43,7 @@ class manage(object):
 
 		#remove any tables
 		if kwargs.has_key('remove'):
+			p = mt.MongoAdmin("datamaster").db["user_tables"].posts
 			cookie = cherrypy.request.cookie
 			cookie_table = cookie["datamaster_table"].value
 
@@ -49,7 +51,7 @@ class manage(object):
 			t = kwargs['remove']
 
 			if cookie_table == t:
-				print "removin"
+				print "removing %s cookie " % cookie_table
 				cookie["datamaster_table"] = t
 				cookie["datamaster_table"]["path"] = "/"
 				cookie["datamaster_table"]["expires"] = 0
