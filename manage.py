@@ -38,11 +38,13 @@ class manage(object):
 		#select any tables
 		if kwargs.has_key('select'):
 			table = kwargs['select']
+			print "selecting %s" % table
 			self.setTable(table)
 			select_table, remove_table = self.table_choice(table, kwargs)
+			choose_vars = self.chooseVars(table)
 
 		#remove any tables
-		if kwargs.has_key('remove'):
+		elif kwargs.has_key('remove'):
 			p = mt.MongoAdmin("datamaster").db["user_tables"].posts
 			cookie = cherrypy.request.cookie
 			cookie_table = cookie["datamaster_table"].value
@@ -52,31 +54,39 @@ class manage(object):
 
 			if cookie_table == t:
 				print "removing %s cookie " % cookie_table
-				cookie["datamaster_table"] = t
-				cookie["datamaster_table"]["path"] = "/"
-				cookie["datamaster_table"]["expires"] = 0
+
+
+				cherrypy.response.cookie['datamaster_table'] = cookie_table
+				cherrypy.response.cookie['datamaster_table']['path'] = '/'
+				cherrypy.response.cookie["datamaster_table"]["expires"] = 0
+
+				select_table, remove_table = self.table_choice(None, kwargs)
+				choose_vars = no_table
+			
+			else:
+				choose_vars = self.chooseVars(table)
+				select_table, remove_table = self.table_choice(cookie_table, kwargs)
 
 			mt.MongoAdmin("datamaster").db.drop_collection("%s_%s.posts" % (t, u))
 			mt.MongoAdmin("datamaster").db.drop_collection("%s_%s_vars.posts" % (t, u))
 			p.remove({'user':u, 'table':t})
 			mt.MongoAdmin("datamaster").db["user_ul_files"].posts.remove({'user':u, 'table':t})
 			common.activity_log('manage', 'remove table', t, kwargs)
+			
 
-		if cookie.has_key('datamaster_table'):
-			table = cookie["datamaster_table"].value
-			choose_vars = self.chooseVars(table)
-			select_table, remove_table = self.table_choice(table, kwargs)
 		else:
-			table = None
-			choose_vars = no_table
-			select_table = no_table
-			remove_table = no_table
+			if cookie.has_key('datamaster_table'):
+				table = cookie["datamaster_table"].value
+				choose_vars = self.chooseVars(table)
+			else:
+				table = None
+				choose_vars = no_table
+
+			select_table, remove_table = self.table_choice(table, kwargs)
 
 		if kwargs:
 			if len(kwargs.keys()) > 1:
 				review_vars = self.reviewVars(kwargs)
-
-
 
 		items = [['select table', select_table], ['choose variables', choose_vars], ['review variables', review_vars], ['remove table', remove_table]]
 
