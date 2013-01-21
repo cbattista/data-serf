@@ -25,8 +25,6 @@ class modify(object):
 
 			posts = mt.MongoAdmin("datamaster").db[tableName].posts
 
-			preview = self.preview(datatable, kwargs)
-
 			if kwargs.has_key('set_op'):
 				output += self.query(datatable, kwargs)
 			if kwargs.has_key('new_var'):
@@ -45,6 +43,10 @@ class modify(object):
 			create = getForm(template.get_def("create_column").render(var_options=keys), modify_url)
 
 			merge = getForm(template.get_def("merge_column").render(var_options=keys), modify_url)
+
+			preview = self.preview(datatable, kwargs)
+
+
 		else:
 			modify = no_table
 			create = no_table
