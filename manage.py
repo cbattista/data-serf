@@ -47,7 +47,10 @@ class manage(object):
 		elif kwargs.has_key('remove'):
 			p = mt.MongoAdmin("datamaster").db["user_tables"].posts
 			cookie = cherrypy.request.cookie
-			cookie_table = cookie["datamaster_table"].value
+			if cookie.has_key('datamaster_table'):
+				cookie_table = cookie["datamaster_table"].value
+			else:
+				cookie_table = None
 
 			print "removing %s" % (kwargs['remove'])
 			t = kwargs['remove']
@@ -64,7 +67,11 @@ class manage(object):
 				choose_vars = no_table
 			
 			else:
-				choose_vars = self.chooseVars(table)
+				if cookie_table:
+					choose_vars = self.chooseVars(cookie_table)
+				else:
+					choose_vars = no_table	
+			
 				select_table, remove_table = self.table_choice(cookie_table, kwargs)
 
 			mt.MongoAdmin("datamaster").db.drop_collection("%s_%s.posts" % (t, u))
