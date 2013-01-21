@@ -34,43 +34,12 @@ class manage(object):
 
 		review_vars = self.reviewVars(None)
 
+		#select any tables
 		if kwargs.has_key('select'):
 			table = kwargs['select']
-		else:
-			if cookie.has_key('datamaster_table'):
-				table = cookie["datamaster_table"].value
-			else:
-				table = None
+			self.setTable(table)
+			select_table, remove_table = self.table_choice(table, kwargs)
 
-		select_table, remove_table = self.table_choice(table, kwargs)
-
-
-		if kwargs:
-			if len(kwargs.keys()) > 1:
-				review_vars = self.reviewVars(kwargs)
-
-		if table:
-			choose_vars = self.chooseVars(table)
-		else:
-			choose_vars = no_table
-
-
-		items = [['select table', select_table], ['choose variables', choose_vars], ['review variables', review_vars], ['remove table', remove_table]]
-
-		accordion = getAccordion(items, contentID='manage-small')
-
-		output = getPage(accordion, "manage", "manage")
-
-		return output
-
-	def table_choice(self, table, kwargs):
-		"""choose table interface
-		"""
-
-		u = cherrypy.user.name
-		posts = mt.MongoAdmin("datamaster").db["tables"].posts
-		p = mt.MongoAdmin("datamaster").db["user_tables"].posts
-		
 		#remove any tables
 		if kwargs.has_key('remove'):
 			cookie = cherrypy.request.cookie
@@ -90,6 +59,38 @@ class manage(object):
 			p.remove({'user':u, 'table':t})
 			mt.MongoAdmin("datamaster").db["user_ul_files"].posts.remove({'user':u, 'table':t})
 			common.activity_log('manage', 'remove table', t, kwargs)
+
+		if cookie.has_key('datamaster_table'):
+			table = cookie["datamaster_table"].value
+			choose_vars = self.chooseVars(table)
+			select_table, remove_table = self.table_choice(table, kwargs)
+		else:
+			table = None
+			choose_vars = no_table
+			select_table = no_table
+			remove_table = no_table
+
+		if kwargs:
+			if len(kwargs.keys()) > 1:
+				review_vars = self.reviewVars(kwargs)
+
+
+
+		items = [['select table', select_table], ['choose variables', choose_vars], ['review variables', review_vars], ['remove table', remove_table]]
+
+		accordion = getAccordion(items, contentID='manage-small')
+
+		output = getPage(accordion, "manage", "manage")
+
+		return output
+
+	def table_choice(self, table, kwargs):
+		"""choose table interface
+		"""
+
+		u = cherrypy.user.name
+		posts = mt.MongoAdmin("datamaster").db["tables"].posts
+		p = mt.MongoAdmin("datamaster").db["user_tables"].posts
 
 		radios = []
 		count = 0
@@ -112,19 +113,26 @@ class manage(object):
 
 		return select_table, remove_table
 
-	def chooseVars(self, table):
-		"""Choose variables interface
-		"""
+	def setTable(self, table):
 		cherrypy.response.cookie['datamaster_table'] = table
 		cherrypy.response.cookie['datamaster_table']['path'] = '/'
 
+	def chooseVars(self, table):
+		"""Choose variables interface
+		"""
+		
 		tableName = "%s_%s" % (table, cherrypy.user.name)
 
 		posts = mt.MongoAdmin("datamaster").db[tableName].posts
 
-		var_posts = mt.MongoAdmin("datamaster").db["%s_vars" % tableName].posts 
+		var_posts = mt.MongoAdmin("datamaster").db["%s_vars" % tableName].posts
 
-		headers = mt.GetKeys(posts)
+		print "start"
+ 
+		try:
+			headers = mt.GetKeys(posts)
+		except:
+			headers = []
 
 		output = "<p>Which variables are you most interested in?  Use the radio buttons to indicate which variables are independent (IV) or dependent (DV).  You also should tell us which variables are the trial and subject info. </p>"""
 
