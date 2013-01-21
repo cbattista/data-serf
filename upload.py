@@ -35,21 +35,6 @@ class upload(object):
 		u = cherrypy.user.name
 		posts = mt.MongoAdmin("datamaster").db["tables"].posts
 
-		#table selector
-		select_table = ""
-		p = mt.MongoAdmin("datamaster").db["user_tables"].posts
-		select_table += """
-		<p>Enter the name of a new table</p>
-		<input type='radio' name='table' value='new'>New table called <input type ='text' name='new_table'/></input><br/>
-		<p>or select one from the list below</p>
-
-		"""
-
-		for row in p.find({'user':cherrypy.user.name}):
-			select_table += "<label><input type='radio' name='table' value='%s'>%s</input></label><br/>" % (row['table'], row['table'])
-
-		select_table = getForm(select_table, upload_url)
-
 		output = ""
 
 		cookie = cherrypy.request.cookie
@@ -75,15 +60,33 @@ class upload(object):
 			self.remove(kwargs)
 			output += getSuccess("Files removed successfully.")
 
-		review_files = self.review()
-
 		upload_files = ""
 
-		items = [['select a table', select_table], ['select your files', select_files], ['review files', review_files]]
+		items = [['select a table', self.select_table()], ['select your files', select_files], ['review files', self.review()]]
 
 		output += getAccordion(items, contentID = 'upload-small')
 
 		return getPage(output, "upload", "upload")
+
+	def select_table(self):
+		"""Select table interface maker
+		"""
+		#table selector
+		select_table = ""
+		p = mt.MongoAdmin("datamaster").db["user_tables"].posts
+		select_table += """
+		<p>Enter the name of a new table</p>
+		<input type='radio' name='table' value='new'>New table called <input type ='text' name='new_table'/></input><br/>
+		<p>or select one from the list below</p>
+
+		"""
+
+		for row in p.find({'user':cherrypy.user.name}):
+			select_table += "<label><input type='radio' name='table' value='%s'>%s</input></label><br/>" % (row['table'], row['table'])
+
+		select_table = getForm(select_table, upload_url)
+
+		return select_table
 
 	def remove(self, kwargs):
 		table = kwargs['table_remove']
