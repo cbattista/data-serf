@@ -58,7 +58,7 @@ class modify(object):
 			merge = no_table
 			preview = no_table
 
-		items = [['select table', select_table(modify_url, table)], ['create', create], ['merge', merge], ['modify', modify], ['preview', preview]]
+		items = [['select table', select_table(modify_url, t)], ['create', create], ['merge', merge], ['modify', modify], ['preview', preview]]
 
 		output += getAccordion(items, contentID='modify-small')
 

@@ -35,14 +35,20 @@ class download(object):
 	def index(self, **kwargs):
 		u = cherrypy.user.name
 		up = mt.MongoAdmin("datamaster").db["user_files"].posts
-		cookie = cherrypy.request.cookie
 	
 		output = ""
 
 		aggregate = ""
 
-		if cookie.has_key("datamaster_table"):
-			table = cookie["datamaster_table"].value
+		table = common.getCookie('datamaster_table')
+
+		#select any tables
+		if kwargs.has_key('select_table'):
+			table = kwargs['select_table']
+			common.setCookie('datamaster_table', table)
+
+
+		if table:
 			tableName = "%s_%s_vars" % (table, cherrypy.user.name)
 			posts = mt.MongoAdmin("datamaster").db[tableName].posts
 
@@ -75,7 +81,7 @@ class download(object):
 
 		
 
-		items = [['aggregate', aggregate], ['create single subject files', download_raw], ["download existing file", dl]]
+		items = [['select table', select_table(download_url, table)], ['aggregate', aggregate], ['create single subject files', download_raw], ["download existing file", dl]]
 
 		output += getAccordion(items, contentID='download-small')
 
