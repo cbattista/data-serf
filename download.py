@@ -189,6 +189,11 @@ class download(object):
 
 		z.close()
 
+		up = mt.MongoAdmin("datamaster").db["user_files"].posts
+
+		if not up.find_one({'user':u, 'fname':datatable + ".zip"}):
+			up.insert({'user':u, 'fname':datatable + ".zip"})
+
 		common.activity_log("download", "download raw", table, kwargs)
 
 		output = getAlert("Your files are ready.  <a href='%s/%s'>Click here to download.</a>" % (domain, zipname), "good")
