@@ -14,23 +14,28 @@ class modify(object):
 	@cherrypy.expose
 	def index(self, **kwargs):
 		u = cherrypy.user.name
-		cookie = cherrypy.request.cookie
 
 		output = ""
 
-		if cookie.has_key("datamaster_table"):
-			table = cookie["datamaster_table"].value
-			datatable = "%s_%s" % (table, u)
-			tableName = "%s_%s_vars" % (table, u)	
+		t = common.getCookie('datamaster_table')
 
-			posts = mt.MongoAdmin("datamaster").db[tableName].posts
+		#select any tables
+		if kwargs.has_key('select_table'):
+			t = kwargs['select_table']
+			common.setCookie('datamaster_table', t)
+
+		if t:
+			table = "%s_%s" % (t, u)
+			var_table = "%s_%s_vars" % (t, u)	
+
+			posts = mt.MongoAdmin("datamaster").db[var_table].posts
 
 			if kwargs.has_key('set_op'):
-				output += self.query(datatable, kwargs)
+				output += self.query(table, kwargs)
 			if kwargs.has_key('new_var'):
-				output += self.create(datatable, kwargs)
+				output += self.create(table, kwargs)
 			if kwargs.has_key('merge_var'):
-				output += self.merge(datatable, kwargs)
+				output += self.merge(table, kwargs)
 
 	
 			keys = posts.find().distinct('name')
@@ -44,7 +49,7 @@ class modify(object):
 
 			merge = getForm(template.get_def("merge_column").render(var_options=keys), modify_url)
 
-			preview = self.preview(datatable, kwargs)
+			preview = self.preview(table, kwargs)
 
 
 		else:
@@ -53,7 +58,7 @@ class modify(object):
 			merge = no_table
 			preview = no_table
 
-		items = [['create', create], ['merge', merge], ['modify', modify], ['preview', preview]]
+		items = [['select table', select_table(modify_url, table)], ['create', create], ['merge', merge], ['modify', modify], ['preview', preview]]
 
 		output += getAccordion(items, contentID='modify-small')
 
