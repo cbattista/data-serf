@@ -43,6 +43,29 @@ def getLogin():
 
 no_table = "<p>You must select a table before performing this action.  <a href='%s'>Click here to select a table</a>.</p>" % manage_url
 
+def select_table(target, curTable = False):
+	u = cherrypy.user.name
+	posts = mt.MongoAdmin("datamaster").db["tables"].posts
+	p = mt.MongoAdmin("datamaster").db["user_tables"].posts
+
+	radios = []
+	count = 0
+	check = 0
+
+	for row in p.find({'user':u}):
+		count += 1
+		if curTable:
+			if curTable == row['table']:
+				check = count
+
+		radios.append(row['table'])
+
+	form = getRadios(radios, 'select_table', check)
+
+	select_table = getForm(form, target, legend = 'Select the table that you want to work with')
+
+	return select_table
+
 def getSuccess(data):
 	output = "<div class='alert alert-success'>%s</div>" % data
 	return output
