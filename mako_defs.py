@@ -41,7 +41,7 @@ def getLogin():
 
 	return output
 
-no_table = "<p>You must select a table before performing this action.  <a href='%s'>Click here to select a table</a>.</p>" % manage_url
+no_table = "<p>You must select a table before performing this action.</p>"
 
 def select_table(target, curTable = False):
 	u = cherrypy.user.name
