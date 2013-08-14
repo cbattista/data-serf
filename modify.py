@@ -82,7 +82,14 @@ class modify(object):
 			else:
 				sub = sids[0]
 
-			lines = dm.write(table, {sid:sub}, headers = [sid, trial] + IVs + DVs, sort=trial, output="list")
+			if run:
+				sort = [run, trial]
+				headers = [sid, trial, run] + IVs + DVs
+			else:
+				headers = [sid, trial] + IVs + DVs
+				sort = trial
+
+			lines = dm.write(table, {sid:sub}, headers = headers, sort=sort, output="list")
 			table = getTable(lines, 'Subject %s' % sub)
 			output += "<p>If you just modified your data you might need to <a class='btn' href=%s>refresh the preview</a> to see the changes you just made.</p>" % modify_url
 			output += "<p>or switch the participant to:</p>" 
