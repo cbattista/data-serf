@@ -74,7 +74,11 @@ class modify(object):
 
 		if sid and trial and (IVs or DVs):
 			if kwargs.has_key('op-preview'):
-				sub = int(kwargs['op-preview'])
+				sub = kwargs['op-preview']
+				try:
+					sub = int(sub)
+				except:
+					pass
 			else:
 				sub = sids[0]
 
