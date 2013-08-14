@@ -28,7 +28,7 @@ def getVariables(table, sids=False):
 	dm = mt.MongoAdmin("datamaster")
 	VARs = mt.MongoAdmin("datamaster").db[var_table].posts
 
-	output = [False, False, False, False, False]
+	output = [False, False, False, False, False, False]
 
 	sid = VARs.find_one({'var_type': 'subject'})
 	if sid:
@@ -49,6 +49,10 @@ def getVariables(table, sids=False):
 	if sid and sids:
 		sids = dm.db[table].posts.find().distinct(sid['name'])
 		output[4] = sids
+
+	run = VARs.find_one({'var_type': 'run'})
+	if run:
+		output[5] = run['name']
 
 	return output
 

@@ -68,7 +68,7 @@ class modify(object):
 
 		dm = mt.MongoAdmin("datamaster")
 
-		sid, trial, IVs, DVs, sids = common.getVariables(table, sids=True)
+		sid, trial, IVs, DVs, sids, run = common.getVariables(table, sids=True)
 
 		output = ""
 

@@ -61,7 +61,6 @@ class manage(object):
 
 				common.removeCookie('datamaster_table', cookie_table)
 
-				select_table, remove_table = self.table_choice(None, kwargs)
 				choose_vars = no_table
 			
 			else:
@@ -78,6 +77,8 @@ class manage(object):
 			mt.MongoAdmin("datamaster").db["user_ul_files"].posts.remove({'user':u, 'table':t})
 			common.activity_log('manage', 'remove table', t, kwargs)
 			
+			select_table, remove_table = self.table_choice(common.getCookie('datamaster_table'), kwargs)
+
 
 		else:
 			table = common.getCookie('datamaster_table')
@@ -155,7 +156,7 @@ class manage(object):
 
 		for h in headers:
 			row = [h]
-			for value in ['IV', 'DV', 'subject', 'trial', 'none']:
+			for value in ['IV', 'DV', 'subject', 'trial', 'run', 'none']:
 				inp = "<label class='radio'><input type = 'radio' name = '%s' value = '%s'/>%s</label>" % (h, value, value)
 				var = var_posts.find_one({'name':h})
 				if var:
@@ -192,11 +193,11 @@ class manage(object):
 
 				common.activity_log("manage", "choose", table, kwargs)
 
-			sid, trial, IVs, DVs, sids = common.getVariables(datatable)
+			sid, trial, IVs, DVs, sids, run = common.getVariables(datatable)
 
 			output = ""
 
-			if sid or trial or IVs or DVs:
+			if sid or trial or IVs or DVs or run:
 				output += "<p>Here are the variables you have chosen:</p>"
 
 				output += "<ul>"
@@ -208,6 +209,8 @@ class manage(object):
 					output += "<li>IVs: %s</li>" % prettyList(IVs)
 				if DVs:
 					output += "<li>DVs: %s</li>" % prettyList(DVs)
+				if run:
+					output += "<li>Run: %s</li>" % run
 				output += "</ul>"
 
 			else:

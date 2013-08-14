@@ -58,9 +58,11 @@ class download(object):
 			if posts.find_one({'var_type':'subject'}):
 				aggregate = self.agg(table)
 				download_raw = self.raw(table)
+				make_prts = self.make_prts(table)
 			else:
 				aggregate = "<p>You need to select a subject variable, <a href='%s'>go to the manage page</a>  to do this.</p>" % manage_url 
 				download_raw = "<p>You need to select a subject variable, <a href='%s'>go to the manage page</a>  to do this.</p>" % manage_url
+				make_prts = "<p>You need to select a subject variable, <a href='%s'>go to the manage page</a>  to do this.</p>" % manage_url
 
 			if kwargs.has_key('dl'):
 				if kwargs['dl'] == 'agg':
@@ -71,6 +73,8 @@ class download(object):
 		else:
 			aggregate = no_table
 			download_raw = no_table
+			make_prts = no_table
+			
 
 		dl = "<p>"
 		fcount = 1
@@ -81,7 +85,7 @@ class download(object):
 
 		
 
-		items = [['select table', select_table(download_url, table)], ['aggregate', aggregate], ['create single subject files', download_raw], ["download existing file", dl]]
+		items = [['select table', select_table(download_url, table)], ['aggregate', aggregate], ['create single subject files', download_raw], ['make PRTs', make_prts], ['download existing file', dl]]
 
 		output += getAccordion(items, contentID='download-small')
 
@@ -93,7 +97,7 @@ class download(object):
 		table(string)
 		"""
 		datatable = "%s_%s" % (table, cherrypy.user.name)
-		sid, trial, IVs, DVs, sids = common.getVariables(datatable, sids=False)
+		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=False)
 
 		form = ""
 		form += getCheckbox(IVs)
@@ -105,11 +109,29 @@ class download(object):
 
 		return output
 
+	def make_prts(self, table):
+		"""make prt interface
+		"""
+		datatable = "%s_%s" % (table, cherrypy.user.name)
+		
+		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=False)
+		
+		output = "<p>Let's make some PRTs (files for BrainVoyager).  We'll need to know a few things.  The condition, run, onset, offset, and whether to check errors.</p>"
+
+		output += "Condition:" + getOptions(IVs, ID="prt_cond")
+		output += "</br>"
+		output += "Run:" + getOptions(IVs, ID="prt_run")
+		output += "</br>"
+		output += "Accuracy:" + getOptions(DVs, ID="prt_ACC")
+
+		return output
+
+
 
 	def aggregate(self, table, kwargs):
 		u = cherrypy.user.name
 		datatable = "%s_%s" % (table, u)
-		sid, trial, IVs, DVs, sids = common.getVariables(datatable, sids=False)
+		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=False)
 
 		output = ""
 
@@ -152,7 +174,7 @@ class download(object):
 		table(string)
 		"""
 		datatable = "%s_%s" % (table, cherrypy.user.name)
-		sid, trial, IVs, DVs, sids = common.getVariables(datatable, sids=False)
+		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=False)
 
 		form = ""
 		form += getCondition([trial] + IVs + DVs, 'Include only data where:')
@@ -170,7 +192,7 @@ class download(object):
 		u = cherrypy.user.name
 		datatable = "%s_%s" % (table, u)
 		dm = mt.MongoAdmin("datamaster")
-		sid, trial, IVs, DVs, sids = common.getVariables(datatable, sids=True)
+		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=True)
 
 		q = parseQuery(kwargs)
 		files = []
