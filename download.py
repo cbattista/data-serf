@@ -27,6 +27,7 @@ from mako_defs import *
 from client import *
 import zipfile
 import common
+import makePRTs
 
 @lg_authority.groups('auth')
 class download(object):
@@ -69,6 +70,9 @@ class download(object):
 					output += self.aggregate(table, kwargs)
 				else:
 					output += self.get_raw(table, kwargs)
+			elif kwargs.has_key('prt_onset'):
+				output += self.prts(table, kwargs)
+
 
 		else:
 			aggregate = no_table
@@ -109,25 +113,6 @@ class download(object):
 
 		return output
 
-	def make_prts(self, table):
-		"""make prt interface
-		"""
-		datatable = "%s_%s" % (table, cherrypy.user.name)
-		
-		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=False)
-		
-		output = "<p>Let's make some PRTs (files for BrainVoyager).  We'll need to know a few things.  The condition, run, onset, offset, and whether to check errors.</p>"
-
-		output += "Condition:" + getOptions(IVs, ID="prt_cond")
-		output += "</br>"
-		output += "Run:" + getOptions(IVs, ID="prt_run")
-		output += "</br>"
-		output += "Accuracy:" + getOptions(DVs, ID="prt_ACC")
-
-		return output
-
-
-
 	def aggregate(self, table, kwargs):
 		u = cherrypy.user.name
 		datatable = "%s_%s" % (table, u)
@@ -167,6 +152,77 @@ class download(object):
 		common.activity_log("download", "aggregate", table, kwargs)
 
 		output += "<p>Your data is ready.  <a href='%s/output/%s'>Click here for SPSS format</a> or <a href='%s/output/%s'>click here  for R format.</p>" % (domain, spss_name, domain, r_name)
+		return output
+
+	def make_prts(self, table):
+		"""make prt interface
+		"""
+		datatable = "%s_%s" % (table, cherrypy.user.name)
+		
+		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=False)
+		
+		output = "<p>Let's make some PRTs (files for BrainVoyager).</p>"
+
+		form = "<label>Experiment Onset Delay (ms):</label>"
+		form += "<input type=\"number\" name=\"prt_onset\" value=0>"
+		form += "<label>Stimulus Onset:</label>" + getOptions(IVs, ID="prt_stim_onset")
+		form += "<label>Stimulus Offset (ms):</label><input type=\"number\" name=\"prt_offset\" value=2000>"
+		form += "<hr>"
+		form += "<label>Condition:</label>" + getOptions(IVs, ID="prt_cond")
+		form += "<hr>"
+		form += "<label>Check Accuracy?</label>" + getRadios(["yes", "no"], name='check_error')
+		form += "<label>Accuracy listed in...</label>" + getOptions(DVs, ID="prt_ACC")
+		form += "<label>Reaction time listed in...:</label>" + getOptions(DVs, ID="prt_RT")
+		form += "<hr>"
+
+		output += getForm(form, download_url)
+
+		return output
+
+	def prts(self, table, kwargs):
+		"""make prts function
+		"""
+		datatable = "%s_%s" % (table, cherrypy.user.name)
+		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=False)
+
+		#get the values
+		onset = int(kwargs['prt_onset'])
+		stim_onset = kwargs['op-prt_stim_onset']
+		stim_offset = int(kwargs['prt_offset'])
+		if kwargs['check_error'] == 'no':
+			check_errors = False
+		else:
+			check_errors = True
+		ACC = kwargs['op-prt_ACC']
+		RT = kwargs['op-prt_RT']
+
+		myCond = kwargs['op-prt_cond']
+
+		settings = settings = """FileVersion:       2\n\nResolutionOfTime:   msec\n\nExperiment:         %s\n\nBackgroundColor:    0 0 0\nTextColor:          255 255 255\nTimeCourseColor:    255 255 255\nTimeCourseThick:    3\nReferenceFuncColor: 0 0 80\nReferenceFuncThick: 3\n\n""" % (table)
+
+		prt_maker = makePRTs.prtFile(datatable, sid, run, settings, onset, stim_offset, check_errors, source="database")
+
+		prt_maker.make(myCond, [], stim_onset, ACC, RT, balance=False)
+
+		files = prt_maker.fileList
+		zipname = "%s_prts" % datatable
+		zippath = os.path.join("output", "%s.zip" % zipname)
+		z = zipfile.ZipFile(zippath, "w")
+		for f in files:
+			z.write(f)
+			os.system('rm %s' % f)
+
+		z.close()
+
+		up = mt.MongoAdmin("datamaster").db["user_files"].posts
+
+		if not up.find_one({'user':cherrypy.user.name, 'fname':zipname + ".zip"}):
+			up.insert({'user':cherrypy.user.name, 'fname':zipname + ".zip"})
+
+		common.activity_log("download", "download prts", table, kwargs)
+
+		output = getAlert("Your files are ready.  <a href='%s/%s'>Click here to download.</a>" % (domain, zippath), "good")
+
 		return output
 
 	def raw(self, table):
