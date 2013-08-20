@@ -44,7 +44,15 @@ class upload(object):
 			table = None
 
 		if kwargs.has_key('table'):
+			#create a new table if necessary
+			if kwargs['table'] == 'new':
+				p = mt.MongoAdmin("datamaster").db["user_tables"].posts
+				if not p.find_one({'user':cherrypy.user.name, 'table':kwargs['new_table']}):
+					p.insert({'table': kwargs['new_table'], 'user':cherrypy.user.name})
+				table = kwargs['new_table']
+	
 			select_files = self.select(kwargs)
+
 		elif table:
 			select_files = self.select({'table':table})
 		else:
@@ -62,13 +70,13 @@ class upload(object):
 
 		upload_files = ""
 
-		items = [['select a table', self.select_table()], ['select your files', select_files], ['review files', self.review()]]
+		items = [['select a table', self.select_table(table)], ['select your files', select_files], ['review files', self.review()]]
 
 		output += getAccordion(items, contentID = 'upload-small')
 
 		return getPage(output, "upload", "upload")
 
-	def select_table(self):
+	def select_table(self, table):
 		"""Select table interface maker
 		"""
 		#table selector
@@ -81,8 +89,13 @@ class upload(object):
 
 		"""
 
+		print "select_Table %s" % table
+
 		for row in p.find({'user':cherrypy.user.name}):
-			select_table += "<label><input type='radio' name='table' value='%s'>%s</input></label><br/>" % (row['table'], row['table'])
+			if row['table'] == table:
+				select_table += "<label><input type='radio' name='table' value='%s' checked='checked'>%s</input></label><br/>" % (row['table'], row['table'])
+			else:
+				select_table += "<label><input type='radio' name='table' value='%s'>%s</input></label><br/>" % (row['table'], row['table'])
 
 		select_table = getForm(select_table, upload_url)
 
@@ -140,8 +153,8 @@ class upload(object):
 			d = {'source_file' : myFile.filename}
 
 			r = mt.ReadTable(None, "datamaster", "%s_%s" % (tableName, cherrypy.user.name), data=lines, kind="eprime", addrow = d)
-			if not p.find_one({'user':cherrypy.user.name, 'table':tableName}):
-				p.insert({'table': tableName, 'user':cherrypy.user.name})
+			#if not p.find_one({'user':cherrypy.user.name, 'table':tableName}):
+				#p.insert({'table': tableName, 'user':cherrypy.user.name})
 
 			output += "The contents of %s have been uploaded.<br/>" % myFile.filename
 			uf.insert({'user':cherrypy.user.name, 'table':tableName, 'file_name' : myFile.filename})
