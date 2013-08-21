@@ -153,8 +153,6 @@ class upload(object):
 			d = {'source_file' : myFile.filename}
 
 			r = mt.ReadTable(None, "datamaster", "%s_%s" % (tableName, cherrypy.user.name), data=lines, kind="eprime", addrow = d)
-			#if not p.find_one({'user':cherrypy.user.name, 'table':tableName}):
-				#p.insert({'table': tableName, 'user':cherrypy.user.name})
 
 			output += "The contents of %s have been uploaded.<br/>" % myFile.filename
 			uf.insert({'user':cherrypy.user.name, 'table':tableName, 'file_name' : myFile.filename})

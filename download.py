@@ -205,7 +205,7 @@ class download(object):
 		prt_maker.make(myCond, [], stim_onset, ACC, RT, balance=False)
 
 		files = prt_maker.fileList
-		zipname = "%s_prts" % datatable
+		zipname = "%s_%s_prts" % (datatable, myCond)
 		zippath = os.path.join("output", "%s.zip" % zipname)
 		z = zipfile.ZipFile(zippath, "w")
 		for f in files:

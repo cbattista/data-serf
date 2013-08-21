@@ -137,7 +137,7 @@ class prtFile:
 				self.prtDict = prtDict
 				self.setColors()
 				self.makePRT()
-				name = "%s_%s_%s" % (self.table, subject, run)
+				name = "%s_%s_%s_%s" % (self.table, field, subject, run)
 				self.writePRT(name)
 				#self.writeEV(name)
 
