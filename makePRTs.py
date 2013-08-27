@@ -41,9 +41,9 @@ def strip(item):
 	return item
 
 class prtFile:
-	def __init__(self, table, sid, run, settings = "", onset = 16000, offset=1950, checkErrors=False, source="eprime", duration=2, TR = 2.0, skippedTRs=2):
+	def __init__(self, table, sid, run, settings = "", onset_start = 16000, offset=1950, checkErrors=False, source="eprime", duration=2, TR = 2.0, skippedTRs=2):
 		self.settings = settings
-		self.onset = onset
+		self.onset_start = onset_start
 		self.offset = offset
 		self.checkErrors = checkErrors
 		self.table = table
@@ -56,7 +56,7 @@ class prtFile:
 		self.subjects = self.posts.distinct(sid)
 		self.fileList = []
 
-	def make(self, field, conditions, on, acc="ACC", rt="RT", balance = True, name=""):
+	def make(self, field, conditions, stim_onset, acc="ACC", rt="RT", trial="trial", balance = True, name=""):
 		posts = self.posts
 
 		for subject in self.subjects:
@@ -68,13 +68,22 @@ class prtFile:
 					prtDict['Error'] = []
 					longestRT = 0
 
-				for row in posts.find({self.sid : subject, self.run : run}):
+
+				#get rows
+				rows = posts.find({self.sid : subject, self.run : run}).sort(trial, 1)
+
+				#calculate subtractor
+				subtractor = self.onset_start - rows[0][stim_onset]
+
+				print subject, run, subtractor, rows[0][stim_onset]
+				
+				for row in rows:
 					proceed = True
 					try:
-						RT = row[rt]
-						myCond = row[field]
-						onset = row[on]
+						onset = row[stim_onset] + subtractor
 						onset = int(onset)
+
+						myCond = row[field]
 						
 					except:
 						proceed = False

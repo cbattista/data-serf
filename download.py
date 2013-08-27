@@ -186,7 +186,7 @@ class download(object):
 		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=False)
 
 		#get the values
-		onset = int(kwargs['prt_onset'])
+		onset_start = int(kwargs['prt_onset'])
 		stim_onset = kwargs['op-prt_stim_onset']
 		stim_offset = int(kwargs['prt_offset'])
 		if kwargs['check_error'] == 'no':
@@ -200,9 +200,9 @@ class download(object):
 
 		settings = settings = """FileVersion:       2\n\nResolutionOfTime:   msec\n\nExperiment:         %s\n\nBackgroundColor:    0 0 0\nTextColor:          255 255 255\nTimeCourseColor:    255 255 255\nTimeCourseThick:    3\nReferenceFuncColor: 0 0 80\nReferenceFuncThick: 3\n\n""" % (table)
 
-		prt_maker = makePRTs.prtFile(datatable, sid, run, settings, onset, stim_offset, check_errors, source="database")
+		prt_maker = makePRTs.prtFile(datatable, sid, run,  settings, onset_start, stim_offset, check_errors, source="database")
 
-		prt_maker.make(myCond, [], stim_onset, ACC, RT, balance=False)
+		prt_maker.make(myCond, [], stim_onset, ACC, RT, trial, balance=False)
 
 		files = prt_maker.fileList
 		zipname = "%s_%s_prts" % (datatable, myCond)
