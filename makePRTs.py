@@ -69,6 +69,8 @@ class prtFile:
 					longestRT = 0
 
 
+				#q = {self.sid : subject, self.run : run, rt : {'$exists':True}}
+
 				#get rows
 				rows = posts.find({self.sid : subject, self.run : run}).sort(trial, 1)
 
@@ -80,6 +82,7 @@ class prtFile:
 				for row in rows:
 					proceed = True
 					try:
+						RT = row[rt]
 						onset = row[stim_onset] + subtractor
 						onset = int(onset)
 
