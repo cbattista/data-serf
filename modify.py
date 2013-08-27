@@ -147,24 +147,28 @@ class modify(object):
 		var_type = kwargs['merge_var_type']
 
 		if var_l and var_r and op:
+			
+			q = {var_l : {'$exists': True}, var_r : {'$exists':True}}
+
+
 			if op == "+":
-				for row in posts.find():
+				for row in posts.find(q):
 					row[name] = row[var_l] + row[var_r]
 					posts.save(row)
 			elif op == "-":
-				for row in posts.find():
+				for row in posts.find(q):
 					row[name] = row[var_l] - row[var_r]
 					posts.save(row)
 			elif op == "*":
-				for row in posts.find():
+				for row in posts.find(q):
 					row[name] = row[var_l] * row[var_r]
 					posts.save(row)
 			elif op == "/":
-				for row in posts.find():
+				for row in posts.find(q):
 					row[name] = row[var_l] / row[var_r]
 					posts.save(row)
 			elif op == "join text":
-				for row in posts.find():
+				for row in posts.find(q):
 					row[name] = str(row[var_l]) + "_" + str(row[var_r])
 					posts.save(row)
 					
