@@ -21,13 +21,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import mt
 import cherrypy
 import datetime
+from config import *
+
+def checkVariables(table, neededVars=[]):
+	variables = getVariables(table)
+
+	table_vars = ['subject', 'trial', 'IV', 'DV', 'sids', 'run'] 	
+
+	output = ""
+
+	for needed in neededVars:
+		index = table_vars.index(needed)
+
+		if not variables[index]:
+			output += "<p>Sorry m'lord, but you need to select a %s variable, <a href='%s'>go to the manage page</a>  to do this.</p>" % (needed, manage_url)
+
+	return output
 
 def getVariables(table, sids=False):
 	var_table = "%s_vars" % table
 
 	dm = mt.MongoAdmin("datamaster")
 	VARs = mt.MongoAdmin("datamaster").db[var_table].posts
-
+	#order is: sid, trial, IVs, DVs, run 
 	output = [False, False, False, False, False, False]
 
 	sid = VARs.find_one({'var_type': 'subject'})
