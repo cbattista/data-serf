@@ -56,14 +56,22 @@ class download(object):
 			IVs = posts.find({'var_type': 'IV'}).distinct('name')
 			DVs = posts.find({'var_type': 'DV'}).distinct('name')
 
-			if posts.find_one({'var_type':'subject'}):
+			#aggregate, download
+			datatable = "%s_%s" % (table, cherrypy.user.name)
+			agg_out = common.checkVariables(datatable, ['subject', 'trial'])
+			if agg_out:
+				aggregate = agg_out
+				download_raw = agg_out
+			else:
 				aggregate = self.agg(table)
 				download_raw = self.raw(table)
-				make_prts = self.make_prts(table)
+
+			#make_prts
+			prts_out = common.checkVariables(datatable, ['subject', 'trial', 'run'])
+			if prts_out:
+				make_prts = prts_out
 			else:
-				aggregate = "<p>You need to select a subject variable, <a href='%s'>go to the manage page</a>  to do this.</p>" % manage_url 
-				download_raw = "<p>You need to select a subject variable, <a href='%s'>go to the manage page</a>  to do this.</p>" % manage_url
-				make_prts = "<p>You need to select a subject variable, <a href='%s'>go to the manage page</a>  to do this.</p>" % manage_url
+				make_prts = self.make_prts(table)
 
 			if kwargs.has_key('dl'):
 				if kwargs['dl'] == 'agg':
