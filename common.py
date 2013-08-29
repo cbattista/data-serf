@@ -23,7 +23,8 @@ import cherrypy
 import datetime
 from config import *
 
-def checkVariables(table, neededVars=[]):
+def checkVariables(table, neededVars):
+
 	variables = getVariables(table)
 
 	table_vars = ['subject', 'trial', 'IV', 'DV', 'sids', 'run'] 	
@@ -32,7 +33,6 @@ def checkVariables(table, neededVars=[]):
 
 	for needed in neededVars:
 		index = table_vars.index(needed)
-
 		if not variables[index]:
 			output += "<p>Sorry m'lord, but you need to select a %s variable, <a href='%s'>go to the manage page</a>  to do this.</p>" % (needed, manage_url)
 
