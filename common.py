@@ -29,12 +29,30 @@ def checkVariables(table, neededVars):
 
 	table_vars = ['subject', 'trial', 'IV', 'DV', 'sids', 'run'] 	
 
+	message = "<p>Sorry m'lord, but you need to select %s in order to use this function.</p><p><a href='%s'>Go to the manage page</a>  to do this.</p>" % ('%s', manage_url)
+
 	output = ""
 
+	indeces = []
 	for needed in neededVars:
 		index = table_vars.index(needed)
 		if not variables[index]:
-			output += "<p>Sorry m'lord, but you need to select a %s variable, <a href='%s'>go to the manage page</a>  to do this.</p>" % (needed, manage_url)
+			indeces.append(needed)
+
+	for ind in indeces:
+		if indeces[-1] == ind and len(indeces) > 1:
+			output += " and a <em>%s</em> variable" % ind
+		else:
+			if len(indeces) > 2:
+				output += "a <em>%s</em> variable, " % ind
+			else:
+				output += "a <em>%s</em> variable" % ind
+
+
+
+		
+	if output:
+		output = message % output
 
 	return output
 
