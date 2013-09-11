@@ -141,6 +141,12 @@ class upload(object):
 		uf = mt.MongoAdmin("datamaster").db["user_ul_files"].posts
 
 		output = "<p>" 
+
+		output += str(type(myFiles))
+
+		if type(myFiles) != list:
+			myFiles = [myFiles]
+
 		for myFile in myFiles:
 			lines = []
 
