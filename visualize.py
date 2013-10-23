@@ -110,7 +110,7 @@ class visualize(object):
 		output += "<p>Which variables do you want to look at?</p>"
 		form = "<label>X Axis:</label>" + getOptions(DVs + IVs, ID="scatter_DV1")
 		form += "<label>Y Axis:</label>" + getOptions(DVs + IVs, ID="scatter_DV2")
-		form += "<label>Group by:</label>" + getOptions(IVs + DVs, ID="scatter_IV")
+		form += "<label>Group by <em>(optional)</em>:</label>" + getOptions([''] + IVs + DVs, ID="scatter_IV")
 
 
 		return output + getForm(form, visualize_url)
@@ -119,7 +119,7 @@ class visualize(object):
 		datatable = "%s_%s" % (table, cherrypy.user.name)
 		print kwargs			
 
-		s = plot.scatter("datamaster", datatable, DV=[kwargs['op-scatter_DV1'], kwargs['op-scatter_DV2']], IV=str(kwargs['op-scatter_IV']), fmt='slide')
+		s = plot.scatter("datamaster", datatable, DV=[kwargs['op-scatter_DV1'], kwargs['op-scatter_DV2']], IV=str(kwargs['op-scatter_IV']), fmt='slide', condition={'outlier' : 0})
 		s.draw()
 
 		output = ""
