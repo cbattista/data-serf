@@ -27,6 +27,8 @@ class modify(object):
 		if t:
 			table = "%s_%s" % (t, u)
 			var_table = "%s_%s_vars" % (t, u)	
+			sid, trial, IVs, DVs, sids, run = common.getVariables(table, sids=True)
+
 
 			posts = mt.MongoAdmin("datamaster").db[var_table].posts
 
@@ -36,7 +38,8 @@ class modify(object):
 				output += self.create(table, kwargs)
 			if kwargs.has_key('merge_var'):
 				output += self.merge(table, kwargs)
-
+			if kwargs.has_key('op-outlier-recurse-field'):
+				output += self.outlier(table, kwargs)
 	
 			keys = posts.find().distinct('name')
 
@@ -51,14 +54,16 @@ class modify(object):
 
 			preview = self.preview(table, kwargs)
 
+			outliers = getForm(template.get_def("mark_outliers").render(DVs=DVs), modify_url)
 
 		else:
 			modify = no_table
 			create = no_table
 			merge = no_table
 			preview = no_table
+			outliers = no_table
 
-		items = [['select table', select_table(modify_url, t)], ['create', create], ['merge', merge], ['modify', modify], ['preview', preview]]
+		items = [['select table', select_table(modify_url, t)], ['create', create], ['merge', merge], ['modify', modify], ['detect outliers', outliers], ['preview', preview]]
 
 		output += getAccordion(items, contentID='modify-small')
 
@@ -181,6 +186,42 @@ class modify(object):
 			output = "<div class='alert alert-success'>new variable %s created from %s and %s</div>" % (name, var_l, var_r)
 		else:
 			output = "<div class='alert alert-error'>no merge performed</div"
+
+		return output
+
+	def outlier(self, table, kwargs):
+		#if_varoutlier=&ifoutlier=&if_textoutlier=&op-outlier-recurse-field=ACC&outlier-maxSD=
+		out_var = kwargs['if_var']
+		out_cond = kwargs['if']
+		out_val = kwargs['if_text']
+
+		recurse = kwargs['op-outlier-recurse-field']
+		maxSD = kwargs['outlier-maxSD'] 
+
+		#make sure the outlier column exists
+		var_posts = mt.MongoAdmin("datamaster").db["%s_vars" % table].posts
+		var_posts.update({'name':'outlier'}, {'$set':{'var_type':'IV'}}, upsert=True)
+
+		if out_var and out_cond and out_val:
+			outlier_type = "%s %s %s" % (out_var, out_cond, out_val)
+			condition = parseCondition(kwargs)
+			posts = mt.MongoAdmin("datamaster").db[table].posts
+			#three possibilities
+			#outlier field has non-zero value, insert additional
+			posts.update(dict(condition, **{'outlier' : {'$exists': True, '$ne': 0}}), {'$push' : {'outlier': outlier_type}})
+			#no value of outlier, set it
+			posts.update(dict(condition, **{'outlier' : {'$exists': False}}), {'$set': {'outlier' : [outlier_type]}}, multi=True)
+			#outlier set to 0, replace it
+			posts.update(dict(condition, **{'outlier' : 0}), {'$set' : {'outlier' : [outlier_type]}}, multi=True)
+
+			output = getAlert("Succesfully marked rows where %s as outliers" % outlier_type, 'good')
+		elif recurse and maxSD:
+			posts = mt.MongoAdmin("datamaster").db[table].posts
+			mt.DetectOutliers(posts, recurse, maxSD)
+			output = getAlert("Succesfully performed recursive outlier detection on %s, max SD = %s." % (recurse, maxSD), "good")
+
+		else:
+			output = ""
 
 		return output
 

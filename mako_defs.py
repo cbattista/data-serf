@@ -163,6 +163,9 @@ template = Template("""
 </%def>
 
 <%def name="options(options, label, ID, active)">
+	%if label:
+		<label><em>${label}</em></label>
+	%endif
 	%if ID:
 		<select name='op-${ID}'>
 	%else:
@@ -197,6 +200,19 @@ template = Template("""
 		<option><</option>
 	</select>
 	<input type='text' name='if_text${number}' />
+</%def>
+
+<%def name = "mark_outliers(DVs)">
+	<legend>Detect and label outliers</legend>
+	<p>Mark as outlier where :
+	${condition(DVs, "", "")}
+	</p>
+	<hr>
+	<p>Or perform recursive outlier detection on 
+	${options(DVs, "", "outlier-recurse-field", "")}
+	using a Max Std Dev of <input type='number' step='0.1' name = 'outlier-maxSD' />
+	</p>
+
 </%def>
 
 <%def name = "create_column(var_options)">
