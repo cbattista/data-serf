@@ -1,4 +1,7 @@
-import pylab
+import matplotlib as mpl
+mpl.use('Agg')
+import matplotlib.pyplot as plt
+
 from mt import WriteTable, ReadTable, MongoAdmin
 import os
 from plot_config import *
@@ -71,10 +74,10 @@ class plot():
 
 		#create dat figure
 		if not self.subplot:
-			self.fig = pylab.figure(figsize=self.figsize, dpi=300)
+			self.fig = plt.figure(figsize=self.figsize, dpi=300)
 
 			#create dat axis
-			self.ax = pylab.subplot(111)
+			self.ax = plt.subplot(111)
 	
 		self.__db__()
 
@@ -85,21 +88,21 @@ class plot():
 		if not y:
 			y = self.IV
 		print x, y
-		pylab.ylabel(titles[x],fontdict=self.axis_font)
-		pylab.xlabel(titles[y], fontdict=self.axis_font)
-		pylab.yticks(fontsize=self.tick_size)
-		pylab.xticks(fontsize=self.tick_size)
+		plt.ylabel(titles[x],fontdict=self.axis_font)
+		plt.xlabel(titles[y], fontdict=self.axis_font)
+		plt.yticks(fontsize=self.tick_size)
+		plt.xticks(fontsize=self.tick_size)
 
 		if not self.subplot:
 			if self.legend:
 				box = self.ax.get_position()
 				self.ax.set_position([box.x0, box.y0 + box.height * 0.1, box.width, box.height * 0.9])
 				if not pos:
-					pylab.legend(loc='upper center', prop=self.leg_font, bbox_to_anchor=(0.5, 0), ncol = 2)
+					plt.legend(loc='upper center', prop=self.leg_font, bbox_to_anchor=(0.5, 0), ncol = 2)
 				else:
-					pylab.legend(loc=pos, prop=self.leg_font)
+					plt.legend(loc=pos, prop=self.leg_font)
 
-		pylab.title(self.title, fontdict=self.title_font)
+		plt.title(self.title, fontdict=self.title_font)
 
 	def __db__(self):
 		w = WriteTable([self.DV], self.IV, self.condition, self.db, self.table, subject="sid")
@@ -117,13 +120,13 @@ class plot():
 			print path
 			os.system("convert %s.png -negate %s.png" % (path, path))
 			if self.show:
-				pylab.show()
+				plt.show()
 
 	def __savefig__(self, path):
 		if not self.subplot:
 			bbox_inches='tight'
-			pylab.savefig("%s.%s" % (path, self.fig_format), bbox_inches='tight')
-			pylab.savefig("%s.svg" % path, bbox_inches='tight')
+			plt.savefig("%s.%s" % (path, self.fig_format), bbox_inches='tight')
+			plt.savefig("%s.svg" % path, bbox_inches='tight')
 
 #class scatter(db, table, DV1, DV2, IV, condition={}, connect=False, loc='upper right', title='', fromFile=False, xlim=[], ylim=[]):
 
@@ -179,7 +182,7 @@ class scatter(plot):
 						sLines[k] = [[x], [y]]
 
 				print xs, ys
-				pylab.scatter(xs, ys, label=l, s=marker_size, color=cdict[l])
+				plt.scatter(xs, ys, label=l, s=marker_size, color=cdict[l])
 		else:
 			xs = []
 			ys = []
@@ -196,12 +199,12 @@ class scatter(plot):
 						sLines[k][1].append(y)
 					else:
 						sLines[k] = [[x], [y]]
-			pylab.scatter(xs, ys, s=marker_size)
+			plt.scatter(xs, ys, s=marker_size)
 
 			
 
 		for k in sLines.keys():
-			pylab.plot(sLines[k][0], sLines[k][1], color='k', alpha=0.25, linewidth=line_width)	
+			plt.plot(sLines[k][0], sLines[k][1], color='k', alpha=0.25, linewidth=line_width)	
 
 		self.__label__(DV2, DV1, pos='lower right')
 
@@ -220,7 +223,7 @@ class bar(plot):
 	def draw(self, subplot = False):
 		posts = self.posts
 
-		pylab.xticks([], fontsize=self.tick_size)
+		plt.xticks([], fontsize=self.tick_size)
 
 		# of subjects
 		N = len(posts.find().distinct('sid'))
@@ -252,19 +255,19 @@ class bar(plot):
 			for row in posts.find({self.IV:l}):
 				ys.append(row[self.DV])
 
-			Ys.append(pylab.mean(ys))
+			Ys.append(plt.mean(ys))
 			allYs += Ys
-			Yerr.append(pylab.std(ys) / (N ** 0.5))
+			Yerr.append(plt.std(ys) / (N ** 0.5))
 			allErrs += Yerr
 			Xs.append(xcount)		
 			allXs += Xs
 			xcount += 1
 			ticks.append(xcount - 0.5)
-			pylab.plot([0, len(levels)+2], [0, 0], color='k')
-			pylab.bar(Xs, Ys, yerr=Yerr, color=self.cdict[l], ecolor='k', label=titles[str(l)], width = 0.5)		
+			plt.plot([0, len(levels)+2], [0, 0], color='k')
+			plt.bar(Xs, Ys, yerr=Yerr, color=self.cdict[l], ecolor='k', label=titles[str(l)], width = 0.5)		
 
-		pylab.xlim([0.5, len(levels)+1])
-		#pylab.ylim([0.4, 1.2])
+		plt.xlim([0.5, len(levels)+1])
+		#plt.ylim([0.4, 1.2])
 
 		#get min, max Y
 
@@ -282,7 +285,7 @@ class bar(plot):
 
 		minY = min(allYs) - allErrs[allYs.index(min(allYs))] - ypush
 
-		pylab.ylim([minY - ypush, maxY + ypush])
+		plt.ylim([minY - ypush, maxY + ypush])
 
 		print "hello", self.sigs
 
@@ -330,14 +333,14 @@ class bar(plot):
 				x1 = sigs[0]
 				x2 = sigs[1]
 				#horiz
-				pylab.plot([x1, x2], [maxY + push, maxY + push], 'k-')
+				plt.plot([x1, x2], [maxY + push, maxY + push], 'k-')
 				#vert 1
-				pylab.plot([x1, x1], [maxY-(ypush/2) + push, maxY + push], 'k-')
+				plt.plot([x1, x1], [maxY-(ypush/2) + push, maxY + push], 'k-')
 				#vert 2				
-				pylab.plot([x2, x2], [maxY-(ypush/2) + push, maxY + push], 'k-')
+				plt.plot([x2, x2], [maxY-(ypush/2) + push, maxY + push], 'k-')
 				push += ypush
 
-			pylab.ylim([minY - ypush, maxY + push])
+			plt.ylim([minY - ypush, maxY + push])
 
 		self.__label__()
 
