@@ -40,7 +40,7 @@ class visualize(object):
 			table = kwargs['select']
 			print "selecting %s" % table
 			common.setCookie('datamaster_table', table)
-			select_table, remove_table = self.table_choice(table, kwargs)
+			select_table = self.table_choice(table, kwargs)
 			make_scatter = self.makeScatter(table)
 
 		else:
