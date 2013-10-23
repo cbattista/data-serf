@@ -283,6 +283,18 @@ template = Template("""
 
 </%def>
 
+<%def name="support_content(domain)">
+	<br/>
+	<h2>You can support the data-serf by doing any or all of the following:</h2>
+	<br/>
+	<br/>
+	<p><em>1. Tell your friends and colleagues.</em>  I can't market this site on my own.  If you find this site to be an invaluable tool, then let others know about it!  At this point I'm not too worried about overloading the site with users (indeed, my eventual plan is to crowdsource this baby into a self-sustaining site, where users basically pay for the CPU/server time they use, and that's it).</p>	
+	<p><em>2. Find bugs.</em> I can't test every feature of this site on my own, so I rely on my users to submit bug reports.  Right now you can do this by just <a href="mailto:battista.christian@gmail.com?Subject=data-serf%20Bug%20Report" target="_top">emailing me</a>, but before you do, please check out the list of known bugs/issues that I already have, <a href='https://github.com/cbattista/data-serf/issues?state=open'>here</a>.</p>
+	<p><em>3.  Fund the development of new features.</em>  Is there a feature you'd like to see?  Let me know!  Even if it's specific to your research, let me know - I have been writing custom code for the psych/neuro crowd for 10 years now, and I've gotten pretty good at it.  So <a href="mailto:battista.christian@gmail.com?Subject=data-serf%20Feature%20Request" target="_top">
+contact me</a> about any potential features, and I can send you a quote - it might be cheaper than you think.  <em>Note:</em>  this also applies to fixing existing bugs.</p>
+	<p><em>4.  Just donate.</em>  If you're impressed with the site, and want to see it grow and prosper, then consider just making a donation.  If you run a lab, then consider how much time you will free up for your grads and RAs to do more important things, like writing and data collection.  <a href="mailto:battista.christian@gmail.com?Subject=data-serf%20Donation" target="_top">Contact me </a> for more details about this (at this point, I want to establish a relationship with potential funders before accepting any money).  Current sponsors include : the <a href='http://www.numericalcognition.org'>Numerical Cognition Lab</a>.</p>
+</%def>
+
 <%def name='learn_content(domain)'>
 	<p>Greetings Lords and Ladies, my name is Christian and I am the guy who made the dataserf.  The dataserf is in its early stages, but I do believe though that it works well enough to perform some basic labours, including data modification and aggregration, for you.</p>
 	<p>When you analyze your data, you usually have it organized in a spreadsheet that you put into SPSS or R or something.  But before that happens, you need to organize all your individual subject files, average all the values, maybe changing the labels of some of your conditions or adjusting variables like reaction time.  This usually manifests itself as a whole pile of repetitive tasks that you don't want to do.</p>
@@ -383,6 +395,10 @@ def getLearnContent():
 
 def getIndexContent():
 	output = template.get_def("index_content").render(lc=learn_url, domain=domain)
+	return output
+
+def getSupportContent():
+	output = template.get_def("support_content").render(lc=learn_url, domain=domain)
 	return output
 
 def getAccordion(items, startIndex=0, contentID=""):

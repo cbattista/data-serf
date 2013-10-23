@@ -55,6 +55,7 @@
 			  <li><a href="${urls[0]}/auth">${user}</a></li>
 			  <li><a href="${urls[0]}/auth/logout">logout</a></li>
 			%endif
+		<li><a href="${urls[6]}">support</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>

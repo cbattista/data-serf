@@ -1,6 +1,3 @@
-import os
-import mt
-
 """
 the dataserf - a digital laborer for behavioral scientists
 Copyright (C) 2013 Christian Battista
@@ -19,41 +16,30 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import os
+import mt
+
 import cherrypy
 from mako_defs import *
 from config import *
 import lg_authority
-import upload, manage, modify, download, learn, support, visualize
 
-
-class index(object):
-
-	auth = lg_authority.AuthRoot()
-	auth__doc = "The object that serves authentication pages"
-
+class support(object):
 
 	@cherrypy.expose
 	def index(self):
 		output = ""
 
-		output += getIndexContent()
+		output += getSupportContent()
 
 		output = getPage(output, '')
 
 		return output 
 
+
 if __name__ == '__main__':
 
-	#cherrypy.config.update({'server.socket_port':index_port})
+	cherrypy.config.update({'server.socket_port':support_port})
 	cherrypy.config.update(cherry_settings)
-	
-	index = index()
-	index.upload = upload.upload()
-	index.manage = manage.manage()
-	index.modify = modify.modify()
-	index.download = download.download()
-	index.learn = learn.learn()
-	index.support = support.support()
-	index.visualize = visualize.visualize()
-	cherrypy.quickstart(index)
+	cherrypy.quickstart(learn())
 
