@@ -203,7 +203,6 @@ template = Template("""
 </%def>
 
 <%def name = "mark_outliers(DVs)">
-	<legend>Detect and label outliers</legend>
 	<p>Mark as outlier where :
 	${condition(DVs, "", "")}
 	</p>
@@ -212,6 +211,8 @@ template = Template("""
 	${options(DVs, "", "outlier-recurse-field", "")}
 	using a Max Std Dev of <input type='number' step='0.1' name = 'outlier-maxSD' />
 	</p>
+	Note : Recursive outlier detection will not consider values you have already marked as outliers.  Please note also this is a very CPU intensive function, so try not to overdo it.
+	<hr>
 
 </%def>
 

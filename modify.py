@@ -54,7 +54,7 @@ class modify(object):
 
 			preview = self.preview(table, kwargs)
 
-			outliers = getForm(template.get_def("mark_outliers").render(DVs=DVs), modify_url)
+			outliers = common.outlierReport(mt.MongoAdmin("datamaster").db[table].posts) + getForm(template.get_def("mark_outliers").render(DVs=DVs), modify_url)
 
 		else:
 			modify = no_table

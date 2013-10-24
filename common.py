@@ -26,14 +26,11 @@ from config import *
 def checkVariables(table, neededVars):
 
 	variables = getVariables(table)
-
 	table_vars = ['subject', 'trial', 'IV', 'DV', 'sids', 'run'] 	
-
 	message = "<p>Sorry m'lord, but you need to select %s in order to use this function.</p><p><a href='%s'>Go to the manage page</a>  to do this.</p>" % ('%s', manage_url)
-
 	output = ""
-
 	indeces = []
+
 	for needed in neededVars:
 		index = table_vars.index(needed)
 		if not variables[index]:
@@ -47,9 +44,6 @@ def checkVariables(table, neededVars):
 				output += "a <em>%s</em> variable, " % ind
 			else:
 				output += "a <em>%s</em> variable" % ind
-
-
-
 		
 	if output:
 		output = message % output
@@ -109,6 +103,31 @@ def removeCookie(name, value):
 	cherrypy.response.cookie[name] = value
 	cherrypy.response.cookie[name]['path'] = '/'
 	cherrypy.response.cookie[name]['expires'] = 0
+
+def outlierReport(posts, outlier = "outlier"):
+	output = "<div class='table'><table><h3>Current outliers</h3><tr><th>Type of outlier</th><th>Count</th><th>% Total</th></tr>"
+	total = posts.find().count()
+	counts = ""
+
+	for ol in posts.distinct(outlier):
+		if ol != 0:
+			counts = ""
+			counts += "<tr>"
+			c = posts.find({outlier : ol}).count()
+			if "_zscore>" in ol:
+				ol = "%s with z score > %s" % (ol.split('_')[0], ol.split('>')[-1])
+			counts += "<td>%s</td><td>%s</td><td>%0.2f%%</td> " % (ol, c, float(c)/float(total) * 100.) 
+		output += counts
+		output += "</tr>"
+
+	if not counts:
+		output = "<p>No outliers labelled yet.</p>"
+	else:
+		output += "</table></div>"
+	
+	output += "<hr>"
+
+	return output
 
 def activity_log(page, action, table, kwargs={}):
 	"""Make an entry into the activity log
