@@ -140,7 +140,7 @@ class download(object):
 
 		q = parseQuery(kwargs)
 
-		w = mt.WriteTable(dvs, ivs, q, "datamaster", datatable, subject=sid, maxSD=None)
+		w = mt.WriteTable(dvs, ivs, q, "datamaster", datatable, subject=sid)
 
 		w.Compute()
 		w.WriteForSPSS()
