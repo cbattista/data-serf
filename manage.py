@@ -156,7 +156,7 @@ class manage(object):
 
 		for h in headers:
 			row = [h]
-			for value in ['IV', 'DV', 'subject', 'trial', 'run', 'none']:
+			for value in common.TABLE_VARS + ['none']:
 				inp = "<label class='radio'><input type = 'radio' name = '%s' value = '%s'/>%s</label>" % (h, value, value)
 				var = var_posts.find_one({'name':h})
 				if var:
@@ -193,7 +193,7 @@ class manage(object):
 
 				common.activity_log("manage", "choose", table, kwargs)
 
-			sid, trial, IVs, DVs, sids, run = common.getVariables(datatable)
+			sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable)
 
 			output = ""
 
@@ -211,6 +211,8 @@ class manage(object):
 					output += "<li>DVs: %s</li>" % prettyList(DVs)
 				if run:
 					output += "<li>Run: %s</li>" % run
+				if outlier:
+					output += "<li>Outlier: %s</li>" % outlier
 				output += "</ul>"
 
 			else:

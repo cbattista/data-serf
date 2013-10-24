@@ -23,16 +23,17 @@ import cherrypy
 import datetime
 from config import *
 
+TABLE_VARS = ['subject', 'trial', 'IV', 'DV', 'sids', 'run', 'outlier']
+
 def checkVariables(table, neededVars):
 
 	variables = getVariables(table)
-	table_vars = ['subject', 'trial', 'IV', 'DV', 'sids', 'run'] 	
 	message = "<p>Sorry m'lord, but you need to select %s in order to use this function.</p><p><a href='%s'>Go to the manage page</a>  to do this.</p>" % ('%s', manage_url)
 	output = ""
 	indeces = []
 
 	for needed in neededVars:
-		index = table_vars.index(needed)
+		index = TABLE_VARS.index(needed)
 		if not variables[index]:
 			indeces.append(needed)
 
@@ -56,7 +57,7 @@ def getVariables(table, sids=False):
 	dm = mt.MongoAdmin("datamaster")
 	VARs = mt.MongoAdmin("datamaster").db[var_table].posts
 	#order is: sid, trial, IVs, DVs, run 
-	output = [False, False, False, False, False, False]
+	output = [False] * len(TABLE_VARS)
 
 	sid = VARs.find_one({'var_type': 'subject'})
 	if sid:
@@ -81,6 +82,10 @@ def getVariables(table, sids=False):
 	run = VARs.find_one({'var_type': 'run'})
 	if run:
 		output[5] = run['name']
+
+	outlier = VARs.find_one({'var_type': 'outlier'})
+	if outlier:
+		output[6] = outlier['name']
 
 	return output
 

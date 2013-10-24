@@ -302,7 +302,7 @@ template = Template("""
 
 <%def name="support_content(domain)">
 	<br/>
-	<h2>You can support the data-serf by doing any or all of the following:</h2>
+	<h2>You can support the dataserf by doing any or all of the following:</h2>
 	<br/>
 	<br/>
 	<p><em>1. Tell your friends and colleagues.</em>  I can't market this site on my own.  If you find this site to be an invaluable tool, then let others know about it!  At this point I'm not too worried about overloading the site with users (indeed, my eventual plan is to crowdsource this baby into a self-sustaining site, where users basically pay for the CPU/server time they use, and that's it).</p>	

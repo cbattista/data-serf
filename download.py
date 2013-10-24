@@ -109,7 +109,7 @@ class download(object):
 		table(string)
 		"""
 		datatable = "%s_%s" % (table, cherrypy.user.name)
-		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=False)
+		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=False)
 
 		form = ""
 		form += getCheckbox(IVs)
@@ -124,7 +124,7 @@ class download(object):
 	def aggregate(self, table, kwargs):
 		u = cherrypy.user.name
 		datatable = "%s_%s" % (table, u)
-		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=False)
+		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=False)
 
 		output = ""
 
@@ -167,7 +167,7 @@ class download(object):
 		"""
 		datatable = "%s_%s" % (table, cherrypy.user.name)
 		
-		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=False)
+		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=False)
 		
 		output = "<p>Let's make some PRTs (files for BrainVoyager).</p>"
 
@@ -191,7 +191,7 @@ class download(object):
 		"""make prts function
 		"""
 		datatable = "%s_%s" % (table, cherrypy.user.name)
-		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=False)
+		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=False)
 
 		#get the values
 		onset_start = int(kwargs['prt_onset'])
@@ -238,7 +238,7 @@ class download(object):
 		table(string)
 		"""
 		datatable = "%s_%s" % (table, cherrypy.user.name)
-		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=False)
+		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=False)
 
 		form = ""
 		form += getCondition([trial] + IVs + DVs, 'Include only data where:')
@@ -256,13 +256,20 @@ class download(object):
 		u = cherrypy.user.name
 		datatable = "%s_%s" % (table, u)
 		dm = mt.MongoAdmin("datamaster")
-		sid, trial, IVs, DVs, sids, run = common.getVariables(datatable, sids=True)
+		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=True)
 
 		q = parseQuery(kwargs)
 		files = []
 
 		for sub in sids:
-			name = dm.write(datatable, dict(q, **{sid:sub}), headers = [sid, trial] + IVs + DVs, sort=trial)
+			headers = [sid, trial] + IVs + DVs
+			sort = trial
+			if run:
+				headers.insert(3, run)
+				sort = [run, trial]
+			if outlier:
+				headers += [outlier]
+			name = dm.write(datatable, dict(q, **{sid:sub}), headers = headers, sort=sort)
 			files.append(name)
 
 		zipname = datatable

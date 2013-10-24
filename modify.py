@@ -27,7 +27,7 @@ class modify(object):
 		if t:
 			table = "%s_%s" % (t, u)
 			var_table = "%s_%s_vars" % (t, u)	
-			sid, trial, IVs, DVs, sids, run = common.getVariables(table, sids=True)
+			sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(table, sids=True)
 
 
 			posts = mt.MongoAdmin("datamaster").db[var_table].posts
@@ -73,7 +73,7 @@ class modify(object):
 
 		dm = mt.MongoAdmin("datamaster")
 
-		sid, trial, IVs, DVs, sids, run = common.getVariables(table, sids=True)
+		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(table, sids=True)
 
 		output = ""
 
@@ -91,8 +91,11 @@ class modify(object):
 				sort = [run, trial]
 				headers = [sid, trial, run] + IVs + DVs
 			else:
-				headers = [sid, trial] + IVs + DVs
+				headers = [sid, trial] + IVs + DVs + [outlier]
 				sort = trial
+
+			if outlier:
+				headers += [outlier]
 
 			lines = dm.write(table, {sid:sub}, headers = headers, sort=sort, output="list")
 			table = getTable(lines, 'Subject %s' % sub)
@@ -200,7 +203,7 @@ class modify(object):
 
 		#make sure the outlier column exists
 		var_posts = mt.MongoAdmin("datamaster").db["%s_vars" % table].posts
-		var_posts.update({'name':'outlier'}, {'$set':{'var_type':'IV'}}, upsert=True)
+		var_posts.update({'name':'outlier'}, {'$set':{'var_type':'outlier'}}, upsert=True)
 
 		if out_var and out_cond and out_val:
 			outlier_type = "%s %s %s" % (out_var, out_cond, out_val)
