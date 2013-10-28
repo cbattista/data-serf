@@ -323,7 +323,7 @@ contact me</a> about any potential features, and I can send you a quote - it mig
 
 <p><b>$500 (or more)</b> a year is suitable for a lab of up to 10 users.  This entitles each account assigned to your lab unlimited use of the site, as well as tech support.  At this level of funding, simple features/bug fixes may be requested - these include things like psychophysical funtions or custom files outputs (provided they are not too complex).</p>
 
-<p><b>$1000 (or more)</b> is suitable for labs of up to 25 users, and includes all of the perks of a $500/yr subscription for all users associated with the lab.  Donations of this size allow for more complex features to be developped, and bigger bugs/issues to be resolved.  Furthermore, generous donations like these provide me with the means to improve the codebase that runs the dataserf - making changes that non-programmers wouldn't necessarily notice, but that make the site run more efficiently .</p>
+<p><b>$1000 (or more)</b> a year is suitable for labs of up to 25 users, and includes all of the perks of a $500/yr subscription for all users associated with the lab.  Donations of this size also allow for more complex features to be developped, and bigger bugs/issues to be resolved.  Furthermore, generous donations like these provide me with the means to improve the codebase that runs the dataserf - making changes that non-programmers wouldn't necessarily notice, but that make the site run more efficiently.  Even if you don't run a huge lab, donations of this size go a long way towards improving the dataserf, for the benefit of all its users.</p>
 
 </%def>
 
