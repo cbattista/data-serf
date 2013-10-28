@@ -310,6 +310,18 @@ template = Template("""
 	<p><em>3.  Fund the development of new features.</em>  Is there a feature you'd like to see?  Let me know!  Even if it's specific to your research, let me know - I have been writing custom code for the psych/neuro crowd for 10 years now, and I've gotten pretty good at it.  So <a href="mailto:battista.christian@gmail.com?Subject=data-serf%20Feature%20Request" target="_top">
 contact me</a> about any potential features, and I can send you a quote - it might be cheaper than you think.  <em>Note:</em>  this also applies to fixing existing bugs.</p>
 	<p><em>4.  Just donate.</em>  If you're impressed with the site, and want to see it grow and prosper, then consider just making a donation.  If you run a lab, then consider how much time you will free up for your grads and RAs to do more important things, like writing and data collection.  <a href="mailto:battista.christian@gmail.com?Subject=data-serf%20Donation" target="_top">Contact me </a> for more details about this (at this point, I want to establish a relationship with potential funders before accepting any money).  Current sponsors include : the <a href='http://www.numericalcognition.org'>Numerical Cognition Lab</a>.</p>
+<p>Not sure how much to give?  Here are some guidlines.</p>
+
+<p><em>If you are an RA or a grad student...</em></p>
+
+<p>$150 (or more) a year can make a big difference.  Entitles you to tech support, and unlimited use of the site (certain CPU-intensive features, like recursive outlier detection, may sometimes need to be restricted to subscribers).  If you get an allowance for software/technology from your department, this can be a good way of spending it.  Alternatively, you can talk to your boss about getting a subscription for you or your lab.  On that note...</p>
+
+<p><em>If you run a lab...</em></p>
+
+<p>$500 (or more) a year is suitable for a lab of up to 10 users.  This entitles each account assigned to your lab unlimited use of the site, as well as tech support.  At this level of funding, simple features/bug fixes may be requested - these include things like psychophysical funtions or custom files outputs (provided they are not too complex).</p>
+
+<p>$1000 (or more) is suitable for labs of up to 25 users, and includes all of the perks of a $500/yr subscription for all users associated with the lab.  Donations of this size allow for more complex features to be developped, and bigger bugs/issues to be resolved.  Furthermore, generous donations like these provide me with the means to improve the codebase that runs the dataserf - making changes that non-programmers wouldn't necessarily notice, but that make the site run more efficiently .</p>
+
 </%def>
 
 <%def name='learn_content(domain)'>
