@@ -204,11 +204,14 @@ class modify(object):
 		#make sure the outlier column exists
 		var_posts = mt.MongoAdmin("datamaster").db["%s_vars" % table].posts
 		var_posts.update({'name':'outlier'}, {'$set':{'var_type':'outlier'}}, upsert=True)
+		#populate it with values
+		posts = mt.MongoAdmin("datamaster").db[table].posts
+		posts.update({'$outlier' : {'$exists':False}}, {'$set':{'outlier':0}}, multi=True)
+
 
 		if out_var and out_cond and out_val:
 			outlier_type = "%s %s %s" % (out_var, out_cond, out_val)
 			condition = parseCondition(kwargs)
-			posts = mt.MongoAdmin("datamaster").db[table].posts
 			#three possibilities
 			#outlier field has non-zero value, insert additional
 			posts.update(dict(condition, **{'outlier' : {'$exists': True, '$ne': 0}}), {'$push' : {'outlier': outlier_type}})
@@ -219,7 +222,6 @@ class modify(object):
 
 			output = getAlert("Succesfully marked rows where %s as outliers" % outlier_type, 'good')
 		elif recurse and maxSD:
-			posts = mt.MongoAdmin("datamaster").db[table].posts
 			mt.DetectOutliers(posts, recurse, maxSD)
 			output = getAlert("Succesfully performed recursive outlier detection on %s, max SD = %s." % (recurse, maxSD), "good")
 
