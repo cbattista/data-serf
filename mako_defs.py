@@ -209,9 +209,9 @@ template = Template("""
 	<hr>
 	<p>Or perform recursive outlier detection on 
 	${options(DVs, "", "outlier-recurse-field", "")}
-	using a Max Std Dev of <input type='number' step='0.1' name = 'outlier-maxSD' />
+	using a Max Std Dev of <input type='number' step='0.1' name = 'outlier-maxSD' min='3.0'/>
 	</p>
-	Note : Recursive outlier detection will not consider values you have already marked as outliers.  Please note also this is a very CPU intensive function, so try not to overdo it.
+	Note : Recursive outlier detection will not consider values you have already marked as outliers.  Please note also this is a very CPU intensive function, so try not to overdo it.  Lastly, it is not currently advisable to use a maximum SD lower than 3.0, as this may cause the server to go a little bonkers (due to too much recursion).</p>
 	<hr>
 
 </%def>
@@ -317,13 +317,13 @@ contact me</a> about any potential features, and I can send you a quote - it mig
 
 <p><em>If you are an RA or a grad student...</em></p>
 
-<p><b>$150 (or more)</b> a year can make a big difference.  Entitles you to tech support, and unlimited use of the site (certain CPU-intensive features, like recursive outlier detection, may sometimes need to be restricted to subscribers).  If you get an allowance for software/technology from your department, this can be a good way of spending it.  Alternatively, you can talk to your boss about getting a subscription for you or your lab.  On that note...</p>
+<p><b>$150 (or more)</b> a year can be helpful.  This would entitle you to tech support, and unlimited use of the site (certain CPU-intensive features, like recursive outlier detection, may sometimes need to be restricted to subscribers).  If you get an allowance for software/technology from your department, this can be a good way of spending it.  Alternatively, you can talk to your boss about getting a subscription for you or your lab.  On that note...</p>
 
 <p><em>If you run a lab...</em></p>
 
 <p><b>$500 (or more)</b> a year is suitable for a lab of up to 10 users.  This entitles each account assigned to your lab unlimited use of the site, as well as tech support.  At this level of funding, simple features/bug fixes may be requested - these include things like psychophysical funtions or custom files outputs (provided they are not too complex).</p>
 
-<p><b>$1000 (or more)</b> a year is suitable for labs of up to 25 users, and includes all of the perks of a $500/yr subscription for all users associated with the lab.  Donations of this size also allow for more complex features to be developped, and bigger bugs/issues to be resolved.  Furthermore, generous donations like these provide me with the means to improve the codebase that runs the dataserf - making changes that non-programmers wouldn't necessarily notice, but that make the site run more efficiently.  Even if you don't run a huge lab, donations of this size go a long way towards improving the dataserf, for the benefit of all its users.</p>
+<p><b>$1000 (or more)</b> a year is suitable for labs of up to 25 users, and includes all of the perks of a $500/yr subscription for all users associated with the lab.  Donations of this size also allow for more complex features to be developped, and bigger bugs/issues to be resolved.  Furthermore, generous donations like these provide me with the means to improve the codebase that runs the dataserf - making changes that non-programmers wouldn't necessarily notice, but that make the site run more efficiently.  <b>Even if you don't run a large lab, donations of this size go a long way towards improving the dataserf, for the benefit of all its users.</b></p>
 
 </%def>
 
