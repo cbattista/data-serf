@@ -6,6 +6,20 @@ from mt import WriteTable, ReadTable, MongoAdmin
 import os
 from plot_config import *
 
+def safePath(path):
+	path = path.replace(' ', '_')
+	path = path.replace(':', '')
+	path = path.replace(',', '')
+	path = path.replace('>', '_')
+	path = path.replace('$', '')
+	path = path.replace('[', '')
+	path = path.replace(']', '')
+	path = path.replace('{', '')
+	path = path.replace('}', '')
+	path = path.replace("'", "")
+	return path	
+
+
 class plot():
 	def __init__(self, db, table, DV, IV, condition={}, title = "", fmt = 'paper', colordict=None, legend=True, sigs = None, show=False, figsize = None, subplot=False):
 		self.db = db
@@ -135,7 +149,7 @@ class scatter(plot):
 		plot.__init__(self, *args, **kwargs)
 
 	def __db__(self):
-		w = WriteTable(self.DV, self.IV, self.condition, self.db, self.table, subject="sid", maxSD=False)
+		w = WriteTable(self.DV, self.IV, self.condition, self.db, self.table, subject="sid")
 
 		fname = "output/%s.dat" % w.name
 		if not os.path.exists(fname):
@@ -209,6 +223,8 @@ class scatter(plot):
 		self.__label__(DV2, DV1, pos='lower right')
 
 		path = "output/scatter/%s_%s_%s_%s_%s_%s" % (db, table, DV1, DV2, IV, str(condition))
+
+		path = safePath(path)
 
 		self.__savefig__(path)
 		self.__style__("%s.png" % path)

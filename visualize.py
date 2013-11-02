@@ -102,7 +102,7 @@ class visualize(object):
 
 		var_posts = mt.MongoAdmin("datamaster").db["%s_vars" % tableName].posts
 
-		sid, trial, IVs, DVs, sids, run = common.getVariables(tableName)
+		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(tableName)
 
 		output = "<p>Make a scatter plot</p>"
 		
