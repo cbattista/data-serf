@@ -22,6 +22,7 @@ import mt
 import cherrypy
 import datetime
 from config import *
+from mako_defs import *
 
 TABLE_VARS = ['subject', 'trial', 'IV', 'DV', 'sids', 'run', 'outlier']
 
@@ -108,6 +109,49 @@ def removeCookie(name, value):
 	cherrypy.response.cookie[name] = value
 	cherrypy.response.cookie[name]['path'] = '/'
 	cherrypy.response.cookie[name]['expires'] = 0
+
+def preview(table, kwargs):
+	dm = mt.MongoAdmin("datamaster")
+
+	print table
+
+	sid, trial, IVs, DVs, sids, run, outlier = getVariables(table, sids=True)
+
+	output = ""
+
+	print sid, trial, IVs, DVs
+
+	if sid and trial and (IVs or DVs):
+		if kwargs.has_key('op-preview'):
+			sub = kwargs['op-preview']
+			try:
+				sub = int(sub)
+			except:
+				pass
+		else:
+			sub = sids[0]
+
+		if run:
+			sort = [run, trial]
+			headers = [sid, trial, run] + IVs + DVs
+		else:
+			headers = [sid, trial] + IVs + DVs + [outlier]
+			sort = trial
+
+		if outlier:
+			headers += [outlier]
+
+		lines = dm.write(table, {sid:sub}, headers = headers, sort=sort, output="list")
+		table = getTable(lines, 'Subject %s' % sub)
+		output += "<p>If you just modified your data you might need to <a class='btn' href=%s>refresh the preview</a> to see the changes you just made.</p>" % modify_url
+		output += "<p>or switch the participant to:</p>" 
+		output += getForm(getOptions(sids, ID="preview", active=sub), form_action=modify_url)
+		output += table
+	else:
+		output += "<p>You do not have all the necessary variables selected.  Better <a class='btn' href='%s'>choose some variables</a>, m'lord.</p>" % manage_url
+
+	return output
+
 
 def outlierReport(posts, outlier = "outlier"):
 	output = "<div class='table'><table><h3>Current outliers</h3><tr><th>Type of outlier</th><th>Count</th><th>% Total</th></tr>"

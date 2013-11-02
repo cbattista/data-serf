@@ -90,11 +90,13 @@ class manage(object):
 
 			select_table, remove_table = self.table_choice(table, kwargs)
 
+		preview = self.preview("%s_%s" % (table, u), kwargs)
+
 		if kwargs:
 			if len(kwargs.keys()) > 1:
 				review_vars = self.reviewVars(kwargs)
 
-		items = [['select table', select_table], ['choose variables', choose_vars], ['review variables', review_vars], ['remove table', remove_table]]
+		items = [['select table', select_table], ['choose variables', choose_vars], ['review variables', review_vars], ['remove table', remove_table], ['preview', preview]]
 
 		accordion = getAccordion(items, contentID='manage-small')
 
@@ -223,6 +225,9 @@ class manage(object):
 			output = no_table
 	
 		return output
+
+	def preview(self, table, kwargs):
+		return common.preview(table, kwargs)
 	
 
 

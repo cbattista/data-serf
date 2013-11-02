@@ -222,8 +222,14 @@ class modify(object):
 
 			output = getAlert("Succesfully marked rows where %s as outliers" % outlier_type, 'good')
 		elif recurse and maxSD:
-			mt.DetectOutliers(posts, recurse, maxSD)
-			output = getAlert("Succesfully performed recursive outlier detection on %s, max SD = %s." % (recurse, maxSD), "good")
+			rod = mt.DetectOutliers(posts, recurse, maxSD)
+
+			status = rod.status 
+
+			if status:
+				output = getAlert("Succesfully performed recursive outlier detection on %s, max SD = %s." % (recurse, maxSD), "good")
+			else:
+				output = getAlert("Warning : Recursive outlier detection did not complete, and all outliers may not have been labelled.  You can either run it again with the same parameters (e.g., maxSD = %s), or use a higher threshold." % maxSD, "bad")
 
 		else:
 			output = ""
