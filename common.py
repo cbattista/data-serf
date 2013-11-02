@@ -110,7 +110,7 @@ def removeCookie(name, value):
 	cherrypy.response.cookie[name]['path'] = '/'
 	cherrypy.response.cookie[name]['expires'] = 0
 
-def preview(table, kwargs):
+def preview(table, kwargs, source):
 	dm = mt.MongoAdmin("datamaster")
 
 	print table
@@ -145,7 +145,7 @@ def preview(table, kwargs):
 		table = getTable(lines, 'Subject %s' % sub)
 		output += "<p>If you just modified your data you might need to <a class='btn' href=%s>refresh the preview</a> to see the changes you just made.</p>" % modify_url
 		output += "<p>or switch the participant to:</p>" 
-		output += getForm(getOptions(sids, ID="preview", active=sub), form_action=modify_url)
+		output += getForm(getOptions(sids, ID="preview", active=sub), form_action=source)
 		output += table
 	else:
 		output += "<p>You do not have all the necessary variables selected.  Better <a class='btn' href='%s'>choose some variables</a>, m'lord.</p>" % manage_url

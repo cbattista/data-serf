@@ -90,7 +90,7 @@ class manage(object):
 
 			select_table, remove_table = self.table_choice(table, kwargs)
 
-		preview = self.preview("%s_%s" % (table, u), kwargs)
+		preview = common.preview("%s_%s" % (table, u), kwargs, manage_url)
 
 		if kwargs:
 			if len(kwargs.keys()) > 1:
@@ -225,9 +225,6 @@ class manage(object):
 			output = no_table
 	
 		return output
-
-	def preview(self, table, kwargs):
-		return common.preview(table, kwargs)
 	
 
 
