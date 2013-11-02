@@ -24,8 +24,32 @@ import datetime
 from config import *
 from mako_defs import *
 
+#note to self : i don't know what this 'sids' variable is for...
 TABLE_VARS = ['subject', 'trial', 'IV', 'DV', 'sids', 'run', 'outlier']
 
+def inspect(table):
+	db = mt.MongoAdmin("datamaster")
+	posts = db.getTable(table).posts
+	keys = mt.GetKeys(posts)
+	d = {}
+	for tv in TABLE_VARS:
+		d[tv] = []
+	for k in keys:
+		if k.lower() in ['subject', 'sid', 's_id', 'id']:
+			d['subject'].append(k)
+		elif k.lower() == 'trial':
+			d['trial'].append(k)
+		elif k.lower() in ['session', 'run']:
+			d['run'].append(k)
+		elif k.lower() == 'outlier':
+			d['outlier'].append(k)
+		elif k.count("RT") or k.count("ACC"):
+			d['DV'].append(k)
+		else:
+			pass
+
+	return d
+		
 def checkVariables(table, neededVars):
 
 	variables = getVariables(table)
