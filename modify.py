@@ -52,7 +52,7 @@ class modify(object):
 
 			merge = getForm(template.get_def("merge_column").render(var_options=keys), modify_url)
 
-			preview = self.preview(table, kwargs)
+			preview = common.preview(table, kwargs, modify_url)
 
 			outliers = common.outlierReport(mt.MongoAdmin("datamaster").db[table].posts) + getForm(template.get_def("mark_outliers").render(DVs=DVs), modify_url)
 
@@ -68,45 +68,6 @@ class modify(object):
 		output += getAccordion(items, contentID='modify-small')
 
 		return getPage(output, "modify", "modify")
-
-	def preview(self, table, kwargs):
-
-		dm = mt.MongoAdmin("datamaster")
-
-		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(table, sids=True)
-
-		output = ""
-
-		if sid and trial and (IVs or DVs):
-			if kwargs.has_key('op-preview'):
-				sub = kwargs['op-preview']
-				try:
-					sub = int(sub)
-				except:
-					pass
-			else:
-				sub = sids[0]
-
-			if run:
-				sort = [run, trial]
-				headers = [sid, trial, run] + IVs + DVs
-			else:
-				headers = [sid, trial] + IVs + DVs + [outlier]
-				sort = trial
-
-			if outlier:
-				headers += [outlier]
-
-			lines = dm.write(table, {sid:sub}, headers = headers, sort=sort, output="list")
-			table = getTable(lines, 'Subject %s' % sub)
-			output += "<p>If you just modified your data you might need to <a class='btn' href=%s>refresh the preview</a> to see the changes you just made.</p>" % modify_url
-			output += "<p>or switch the participant to:</p>" 
-			output += getForm(getOptions(sids, ID="preview", active=sub), form_action=modify_url)
-			output += table
-		else:
-			output += "<p>You do not have all the necessary variables selected.  Better <a class='btn' href='%s'>choose some variables</a>, m'lord.</p>" % manage_url
-
-		return output
 
 
 	def create(self, table, kwargs):

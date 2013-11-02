@@ -142,8 +142,6 @@ class manage(object):
 		posts = mt.MongoAdmin("datamaster").db[tableName].posts
 
 		var_posts = mt.MongoAdmin("datamaster").db["%s_vars" % tableName].posts
-
-		print "choosing vars"
  
 		try:
 			headers = mt.GetKeys(posts)

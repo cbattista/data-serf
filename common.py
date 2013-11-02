@@ -113,8 +113,6 @@ def removeCookie(name, value):
 def preview(table, kwargs, source):
 	dm = mt.MongoAdmin("datamaster")
 
-	print table
-
 	sid, trial, IVs, DVs, sids, run, outlier = getVariables(table, sids=True)
 
 	output = ""
@@ -135,7 +133,7 @@ def preview(table, kwargs, source):
 			sort = [run, trial]
 			headers = [sid, trial, run] + IVs + DVs
 		else:
-			headers = [sid, trial] + IVs + DVs + [outlier]
+			headers = [sid, trial] + IVs + DVs
 			sort = trial
 
 		if outlier:
