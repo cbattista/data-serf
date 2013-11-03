@@ -26,13 +26,14 @@ from mako_defs import *
 
 #note to self : i don't know what this 'sids' variable is for...
 TABLE_VARS = ['subject', 'trial', 'IV', 'DV', 'sids', 'run', 'outlier']
+TVs = ['subject', 'trial', 'IV', 'DV', 'run', 'outlier']
 
 def inspect(table):
 	db = mt.MongoAdmin("datamaster")
 	posts = db.getTable(table).posts
 	keys = mt.GetKeys(posts)
 	d = {}
-	for tv in TABLE_VARS:
+	for tv in TVs:
 		d[tv] = []
 	for k in keys:
 		if k.lower() in ['subject', 'sid', 's_id', 'id']:
@@ -47,6 +48,12 @@ def inspect(table):
 			d['DV'].append(k)
 		else:
 			pass
+
+	#if no outlier column
+	if not d['outlier']:
+		#create one
+		posts.update({}, {'$set' : {'outlier':0}}, multi=True)
+		d['outlier'].append('outlier')
 
 	return d
 		
@@ -75,6 +82,18 @@ def checkVariables(table, neededVars):
 		output = message % output
 
 	return output
+
+def markVariables(table, inspection):
+	var_table = "%s_vars" % table
+	dm = mt.MongoAdmin("datamaster")
+	VARs = mt.MongoAdmin("datamaster").db[var_table].posts
+	for k in inspection.keys():
+		for item in inspection[k]:
+			VARs.remove({'name':item})
+			VARs.update({'name':item}, {'$set':{'var_type':k}}, upsert=True)
+
+	activity_log("upload", "auto-choose", table, inspection)
+
 
 def getVariables(table, sids=False):
 	var_table = "%s_vars" % table

@@ -167,6 +167,13 @@ class upload(object):
 	
 		common.activity_log('upload', 'upload', tableName)
 
+		#take a look at what variables we might have
+		VARs = common.inspect("%s_%s" % (tableName, cherrypy.user.name))
+
+		print VARs
+		#mark 'em
+		common.markVariables("%s_%s" % (tableName, cherrypy.user.name), VARs)
+
 		return output
 
 	def review(self):

@@ -62,12 +62,16 @@ class manage(object):
 				common.removeCookie('datamaster_table', cookie_table)
 
 				choose_vars = no_table
+
+				preview = no_table
 			
 			else:
 				if cookie_table:
 					choose_vars = self.chooseVars(cookie_table)
+					preview = common.preview("%s_%s" % (cookie_table, u), kwargs, manage_url)
 				else:
 					choose_vars = no_table	
+					preview = no_table
 			
 				select_table, remove_table = self.table_choice(cookie_table, kwargs)
 
@@ -85,13 +89,13 @@ class manage(object):
 
 			if table:
 				choose_vars = self.chooseVars(table)
+				preview = common.preview("%s_%s" % (table, u), kwargs, manage_url)
 			else:
 				choose_vars = no_table
+				preview = no_table
 
 			select_table, remove_table = self.table_choice(table, kwargs)
-
-		preview = common.preview("%s_%s" % (table, u), kwargs, manage_url)
-
+	
 		if kwargs:
 			if len(kwargs.keys()) > 1:
 				review_vars = self.reviewVars(kwargs)
@@ -156,7 +160,8 @@ class manage(object):
 
 		for h in headers:
 			row = [h]
-			for value in common.TABLE_VARS + ['none']:
+
+			for value in common.TVs + ['none']:
 				inp = "<label class='radio'><input type = 'radio' name = '%s' value = '%s'/>%s</label>" % (h, value, value)
 				var = var_posts.find_one({'name':h})
 				if var:

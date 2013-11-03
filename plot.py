@@ -361,15 +361,7 @@ class bar(plot):
 		self.__label__()
 
 		path = self.fname
-		path = path.replace(' ', '_')
-		path = path.replace(':', '')
-		path = path.replace(',', '')
-		path = path.replace('>', '_')
-		path = path.replace('$', '')
-		path = path.replace('[', '')
-		path = path.replace(']', '')
-		path = path.replace('{', '')
-		path = path.replace('}', '')
+		path = safePath(path)
 
 		self.__savefig__("bars/%s" % path)
 		self.__style__("bars/%s" % path)
