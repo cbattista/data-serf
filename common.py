@@ -52,7 +52,7 @@ def inspect(table):
 	#if no outlier column
 	if not d['outlier']:
 		#create one
-		posts.update({}, {'$set' : {'outlier':0}}, multi=True)
+		posts.update({'outlier': {'$exits':False}}, {'$set' : {'outlier':0}}, multi=True)
 		d['outlier'].append('outlier')
 
 	return d
@@ -184,7 +184,7 @@ def preview(table, kwargs, source):
 
 		lines = dm.write(table, {sid:sub}, headers = headers, sort=sort, output="list")
 		table = getTable(lines, 'Subject %s' % sub)
-		output += "<p>If you just modified your data you might need to <a class='btn' href=%s>refresh the preview</a> to see the changes you just made.</p>" % modify_url
+		output += "<p>If you just modified your data you might need to <a class='btn' href=%s>refresh the preview</a> to see the changes you just made.</p>" % source
 		output += "<p>or switch the participant to:</p>" 
 		output += getForm(getOptions(sids, ID="preview", active=sub), form_action=source)
 		output += table
