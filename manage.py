@@ -42,6 +42,7 @@ class manage(object):
 			common.setCookie('datamaster_table', table)
 			select_table, remove_table = self.table_choice(table, kwargs)
 			choose_vars = self.chooseVars(table)
+			preview = common.preview("%s_%s" % (table, u), kwargs, manage_url)
 
 		#remove any tables
 		elif kwargs.has_key('remove'):
