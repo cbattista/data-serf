@@ -23,7 +23,7 @@ import cherrypy
 from mako_defs import *
 from config import *
 import lg_authority
-import upload, manage, modify, download, learn, support, visualize
+import upload, manage, modify, download, learn, support, visualize#, dashboard
 
 
 class index(object):
@@ -55,5 +55,6 @@ if __name__ == '__main__':
 	index.learn = learn.learn()
 	index.support = support.support()
 	index.visualize = visualize.visualize()
+	#index.dashboard = dashboard.dashboard()
 	cherrypy.quickstart(index)
 

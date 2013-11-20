@@ -328,7 +328,7 @@ contact me</a> about any potential features, and I can send you a quote - it mig
 </%def>
 
 <%def name='learn_content(domain)'>
-	<p>Greetings Lords and Ladies, my name is Christian and I am the guy who made the dataserf.  The dataserf is in its early stages, but I do believe though that it works well enough to perform some basic labours, including data modification and aggregration, for you.</p>
+	<p>Greetings Lords and Ladies, my name is Christian and I am the guy who made the dataserf.  The dataserf is in its early stages, but I do believe though that it works well enough to perform some basic labours, including data modification and aggregation, for you.</p>
 	<p>When you analyze your data, you usually have it organized in a spreadsheet that you put into SPSS or R or something.  But before that happens, you need to organize all your individual subject files, average all the values, maybe changing the labels of some of your conditions or adjusting variables like reaction time.  This usually manifests itself as a whole pile of repetitive tasks that you don't want to do.</p>
 	<p>The dataserf was built to do these tasks for you.  It will put your data into a storage unit called a <em>table</em>.  Each table is a place to hold data from all your subjects for a given experiment.</p>
 	<p>Once the dataserf has your data in a table, it can modify the <em>variables</em>.  A variable is a value from a column in your spreadsheet.  So this might be your reaction time data, accuracy, or your experimental conditions.</p>
