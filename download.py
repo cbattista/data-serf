@@ -111,13 +111,18 @@ class download(object):
 		datatable = "%s_%s" % (table, cherrypy.user.name)
 		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=False)
 
-		form = ""
-		form += getCheckbox(IVs)
-		form += getCheckbox(DVs)
-		form += getCondition(IVs + DVs + [trial], 'Include only data where:')
+		check_vars = common.checkVariables(datatable, ['subject', 'trial', 'IV', 'DV'])
 
-		output = "<p>Here are the variables you have labelled.  Select the ones you want to combine into your new file.  You will get a single file with each subject's average DV(s) for each IV(s).</p>"
-		output += getForm(form, download_url, hidden=['dl', 'agg'])
+		if check_vars:
+			output = check_vars
+		else:
+			form = ""
+			form += getCheckbox(IVs)
+			form += getCheckbox(DVs)
+			form += getCondition(IVs + DVs + [trial], 'Include only data where:')
+
+			output = "<p>Here are the variables you have labelled.  Select the ones you want to combine into your new file.  You will get a single file with each subject's average DV(s) for each IV(s).</p>"
+			output += getForm(form, download_url, hidden=['dl', 'agg'])
 
 		return output
 
