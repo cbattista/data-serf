@@ -31,71 +31,59 @@ class manage(object):
 	def index(self, **kwargs):
 
 		cookie = cherrypy.request.cookie
-		review_vars = self.reviewVars(None)
 
 		u = cherrypy.user.name
 
-		#select any tables
+		#establish a table from the cookie
+		table = common.getCookie("datamaster_table")
+
+		#user has selected a table
 		if kwargs.has_key('select'):
 			table = kwargs['select']
 			common.setCookie('datamaster_table', table)
-			select_table, remove_table = self.table_choice(table, kwargs)
-			choose_vars = self.chooseVars(table)
-			preview = common.preview("%s_%s" % (table, u), kwargs, manage_url)
 
-		#remove any tables
-		elif kwargs.has_key('remove'):
+		#user has removed a table
+		if kwargs.has_key('remove'):
 
 			p = mt.MongoAdmin("datamaster").db["user_tables"].posts
-
-			#is there a cookie?
-			cookie_table = common.getCookie("datamaster_table")
-
 			t = kwargs['remove']
 
-			if cookie_table == t:
-
-				common.removeCookie('datamaster_table', cookie_table)
-
-				choose_vars = no_table
-
-				preview = no_table
-			
-			else:
-				if cookie_table:
-					choose_vars = self.chooseVars(cookie_table)
-					preview = common.preview("%s_%s" % (cookie_table, u), kwargs, manage_url)
-				else:
-					choose_vars = no_table	
-					preview = no_table
-			
-				select_table, remove_table = self.table_choice(cookie_table, kwargs)
+			#is this the currently active table?
+			if table == t:
+				common.removeCookie('datamaster_table', table)
+				table = None
 
 			mt.MongoAdmin("datamaster").db.drop_collection("%s_%s.posts" % (t, u))
 			mt.MongoAdmin("datamaster").db.drop_collection("%s_%s_vars.posts" % (t, u))
 			p.remove({'user':u, 'table':t})
 			mt.MongoAdmin("datamaster").db["user_ul_files"].posts.remove({'user':u, 'table':t})
 			common.activity_log('manage', 'remove table', t, kwargs)
-			
-			select_table, remove_table = self.table_choice(common.getCookie('datamaster_table'), kwargs)
 
+		select_table, remove_table = self.table_choice(table, kwargs)
+
+		#user has selected some variable
+		if kwargs.has_key('choose'):
+			if kwargs['choose'] == 'vars':
+				datatable = "%s_%s" % (table, cherrypy.user.name)
+				tableName = "%s_%s_vars" % (table, cherrypy.user.name)
+				posts = mt.MongoAdmin("datamaster").db[tableName].posts
+				for k in kwargs.keys():
+					posts.remove({'name':k})
+					posts.update({'name':k}, {'$set':{'var_type':kwargs[k]}}, upsert=True)
+				common.activity_log("manage", "choose", table, kwargs)
+	
+		#if there's an active table
+		if table:
+			choose_vars = self.chooseVars(table)
+			review_vars = common.variableTable("%s_%s" % (table, u))
+			preview = common.preview("%s_%s" % (table, u), kwargs, manage_url)
 
 		else:
-			table = common.getCookie('datamaster_table')
-
-			if table:
-				choose_vars = self.chooseVars(table)
-				preview = common.preview("%s_%s" % (table, u), kwargs, manage_url)
-			else:
-				choose_vars = no_table
-				preview = no_table
-
-			select_table, remove_table = self.table_choice(table, kwargs)
+			choose_vars = no_table
+			review_vars = no_table
+			preview = no_table							
+			
 	
-		if kwargs:
-			if len(kwargs.keys()) > 1:
-				review_vars = self.reviewVars(kwargs)
-
 		items = [['select table', select_table], ['choose variables', choose_vars], ['review variables', review_vars], ['remove table', remove_table], ['preview', preview]]
 
 		accordion = getAccordion(items, contentID='manage-small')
@@ -148,7 +136,7 @@ class manage(object):
 		except:
 			headers = []
 
-		output = "<p>Which variables are you most interested in?  Use the radio buttons to indicate which variables are independent (IV) or dependent (DV).  You also should tell us which variables are the trial and subject info. </p>"""
+		output = "<p>Which variables are you most interested in?  Use the radio buttons to indicate which variables are independent (IV) or dependent (DV).  You should also indicate which variables are the trial and subject info. </p>"""
 
 		output += "<p>table: <em>%s</em><p>" % table
 
@@ -160,72 +148,26 @@ class manage(object):
 			for value in common.TVs + ['none']:
 				inp = "<label class='radio'><input type = 'radio' name = '%s' value = '%s'/>%s</label>" % (h, value, value)
 				var = var_posts.find_one({'name':h})
+				#if this is a particular type of variable
 				if var:
 					var_type = var['var_type']
 					if var_type == value:
+						inp = "<label class='radio'><input type = 'radio' name = '%s' value = '%s' checked='checked'/>%s</label>" % (h, value, value)
+				#otherwise it's none
+				else:
+					if value == 'none':
 						inp = "<label class='radio'><input type = 'radio' name = '%s' value = '%s' checked='checked'/>%s</label>" % (h, value, value)
 				row.append(inp)
 			table_data.append(row)
 		
 		table_data = getTable(table_data)
 
-		form = getForm(table_data, manage_url)
+		form = getForm(table_data, manage_url, hidden=['choose', 'vars'])
 
 		output += form
 
 		return output
-	
-	def reviewVars(self, kwargs):
-		"""review variables interface
-		"""
-		cookie = cherrypy.request.cookie
-		if cookie.has_key("datamaster_table"):
-	
-			table = cookie["datamaster_table"].value
-			datatable = "%s_%s" % (table, cherrypy.user.name)
-			tableName = "%s_%s_vars" % (table, cherrypy.user.name)
-			posts = mt.MongoAdmin("datamaster").db[tableName].posts
-
-			if kwargs:
-				for k in kwargs.keys():
-					posts.remove({'name':k})
-					posts.update({'name':k}, {'$set':{'var_type':kwargs[k]}}, upsert=True)
-
-
-				common.activity_log("manage", "choose", table, kwargs)
-
-			sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable)
-
-			output = ""
-
-			if sid or trial or IVs or DVs or run:
-				output += "<p>Here are the variables you have chosen:</p>"
-
-				output += "<ul>"
-				if sid:
-					output += "<li>subject: %s</li>" % sid
-				if trial:
-					output += "<li>trial: %s</li>" % trial
-				if IVs:
-					output += "<li>IVs: %s</li>" % prettyList(IVs)
-				if DVs:
-					output += "<li>DVs: %s</li>" % prettyList(DVs)
-				if run:
-					output += "<li>Run: %s</li>" % run
-				if outlier:
-					output += "<li>Outlier: %s</li>" % outlier
-				output += "</ul>"
-
-			else:
-				output += "<p>You have no variables chosen yet.</p>"
-
-
-		else:
-			output = no_table
-	
-		return output
-	
-
+		
 
 if __name__ == '__main__':
 #Turn on lg_authority for our website
