@@ -150,7 +150,7 @@ def variableTable(table):
 			else:
 				displayList.append([varType, var])
 		else:
-			displayList.append([varType, 'None selected'])	
+			displayList.append([varType, "<em>None selected</em>"])	
 
 	table = getTable(displayList)
 

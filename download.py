@@ -112,7 +112,7 @@ class download(object):
 		table(string)
 		"""
 		datatable = "%s_%s" % (table, cherrypy.user.name)
-		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=False)
+		sid, trial, IVs, DVs, run, outlier, sids = common.getVariables(datatable, sids=False)
 
 		check_vars = common.checkVariables(datatable, ['subject', 'trial', 'IV', 'DV'])
 
@@ -132,7 +132,7 @@ class download(object):
 	def aggregate(self, table, kwargs):
 		u = cherrypy.user.name
 		datatable = "%s_%s" % (table, u)
-		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=False)
+		sid, trial, IVs, DVs, run, outlier, sids = common.getVariables(datatable, sids=False)
 
 		output = ""
 
@@ -199,7 +199,7 @@ class download(object):
 		"""make prts function
 		"""
 		datatable = "%s_%s" % (table, cherrypy.user.name)
-		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=False)
+		sid, trial, IVs, DVs, run, outlier, sids = common.getVariables(datatable, sids=False)
 
 		#get the values
 		onset_start = int(kwargs['prt_onset'])
@@ -246,7 +246,7 @@ class download(object):
 		table(string)
 		"""
 		datatable = "%s_%s" % (table, cherrypy.user.name)
-		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=False)
+		sid, trial, IVs, DVs, run, outlier, sids = common.getVariables(datatable, sids=False)
 
 		form = ""
 		form += getCondition([trial] + IVs + DVs, 'Include only data where:')
@@ -264,7 +264,7 @@ class download(object):
 		u = cherrypy.user.name
 		datatable = "%s_%s" % (table, u)
 		dm = mt.MongoAdmin("datamaster")
-		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=True)
+		sid, trial, IVs, DVs, run, outlier, sids = common.getVariables(datatable, sids=True)
 		q = parseQuery(kwargs)
 
 		#put the headers together
@@ -293,7 +293,7 @@ class download(object):
 		table(string)
 		"""
 		datatable = "%s_%s" % (table, cherrypy.user.name)
-		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=False)
+		sid, trial, IVs, DVs, run, outlier, sids = common.getVariables(datatable, sids=False)
 
 		form = ""
 		form += getCondition([trial] + IVs + DVs, 'Include only data where:')
@@ -311,7 +311,7 @@ class download(object):
 		u = cherrypy.user.name
 		datatable = "%s_%s" % (table, u)
 		dm = mt.MongoAdmin("datamaster")
-		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=True)
+		sid, trial, IVs, DVs, run, outlier, sids = common.getVariables(datatable, sids=True)
 
 		q = parseQuery(kwargs)
 		files = []

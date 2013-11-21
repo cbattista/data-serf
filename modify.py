@@ -27,7 +27,7 @@ class modify(object):
 		if t:
 			table = "%s_%s" % (t, u)
 			var_table = "%s_%s_vars" % (t, u)	
-			sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(table, sids=True)
+			sid, trial, IVs, DVs, run, outlier, sids = common.getVariables(table, sids=True)
 
 
 			posts = mt.MongoAdmin("datamaster").db[var_table].posts
