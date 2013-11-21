@@ -62,9 +62,11 @@ class download(object):
 			if agg_out:
 				aggregate = agg_out
 				download_raw = agg_out
+				multi_sub = agg_out
 			else:
 				aggregate = self.agg(table)
 				download_raw = self.raw(table)
+				multi_sub = self.onefile(table)
 
 			#make_prts
 			prts_out = common.checkVariables(datatable, ['subject', 'trial', 'run'])
@@ -76,6 +78,8 @@ class download(object):
 			if kwargs.has_key('dl'):
 				if kwargs['dl'] == 'agg':
 					output += self.aggregate(table, kwargs)
+				elif kwargs['dl'] == 'multi':
+					output += self.get_onefile(table, kwargs)
 				else:
 					output += self.get_raw(table, kwargs)
 			elif kwargs.has_key('prt_onset'):
@@ -86,6 +90,7 @@ class download(object):
 			aggregate = no_table
 			download_raw = no_table
 			make_prts = no_table
+			multi_sub = no_table
 			
 
 		dl = "<p>"
@@ -95,9 +100,7 @@ class download(object):
 			fcount+=1
 		dl += "</p>"
 
-		
-
-		items = [['select table', select_table(download_url, table)], ['aggregate', aggregate], ['create single subject files', download_raw], ['make PRTs', make_prts], ['download existing file', dl]]
+		items = [['select table', select_table(download_url, table)], ['aggregate', aggregate], ['download multi-subject file', multi_sub], ['create single subject files', download_raw], ['make PRTs', make_prts], ['download existing file', dl]]
 
 		output += getAccordion(items, contentID='download-small')
 
@@ -236,6 +239,53 @@ class download(object):
 
 		output = getAlert("Your files are ready.  <a href='%s/%s'>Click here to download.</a>" % (domain, zippath), "good")
 
+		return output
+
+	def onefile(self, table):
+		"""Get one file with all subject data interface
+		table(string)
+		"""
+		datatable = "%s_%s" % (table, cherrypy.user.name)
+		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=False)
+
+		form = ""
+		form += getCondition([trial] + IVs + DVs, 'Include only data where:')
+
+		output = "<p>You will get one file with each subject's data in it.</p>"
+		output += getForm(form, download_url, hidden=['dl','multi'])
+
+		return output
+
+	def get_onefile(self, table, kwargs):
+		"""Print the raw data (csv format) into a single file for the user to download
+		table(string) - name of table to pull the vars from
+		kwargs - optional query info
+		"""
+		u = cherrypy.user.name
+		datatable = "%s_%s" % (table, u)
+		dm = mt.MongoAdmin("datamaster")
+		sid, trial, IVs, DVs, sids, run, outlier = common.getVariables(datatable, sids=True)
+		q = parseQuery(kwargs)
+
+		#put the headers together
+		headers = [sid, trial] + IVs + DVs
+		sort = [sid, trial]
+		if run:
+			headers.insert(3, run)
+			sort = [sid, run, trial]
+		if outlier:
+			headers += [outlier]
+
+		#write that biznass out
+		name = dm.write(datatable, q, headers = headers, sort=sort)
+
+		name += ".csv"
+
+		up = mt.MongoAdmin("datamaster").db["user_files"].posts
+		if not up.find_one({'user':u, 'fname':name}):
+			up.insert({'user':u, 'fname':name})
+		common.activity_log("download", "download single raw", table, kwargs)
+		output = getAlert("Your file is ready.  <a href='%s/%s'>Click here to download.</a>" % (domain, name), "good")
 		return output
 
 	def raw(self, table):
