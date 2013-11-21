@@ -43,7 +43,7 @@ def inspect(table):
 			d['run'].append(k)
 		elif k.lower() == 'outlier':
 			d['outlier'].append(k)
-		elif k.count("RT") or k.count("ACC"):
+		elif (k.count("RT") and not k.count("RTTime")) or k.count("ACC"):
 			d['DV'].append(k)
 		else:
 			pass
