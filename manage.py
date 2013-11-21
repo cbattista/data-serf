@@ -38,7 +38,6 @@ class manage(object):
 		#select any tables
 		if kwargs.has_key('select'):
 			table = kwargs['select']
-			print "selecting %s" % table
 			common.setCookie('datamaster_table', table)
 			select_table, remove_table = self.table_choice(table, kwargs)
 			choose_vars = self.chooseVars(table)
@@ -46,19 +45,15 @@ class manage(object):
 
 		#remove any tables
 		elif kwargs.has_key('remove'):
-			print "removing %s" % (kwargs['remove'])
 
 			p = mt.MongoAdmin("datamaster").db["user_tables"].posts
 
 			#is there a cookie?
 			cookie_table = common.getCookie("datamaster_table")
 
-			print cookie_table
-
 			t = kwargs['remove']
 
 			if cookie_table == t:
-				print "removing %s cookie " % cookie_table
 
 				common.removeCookie('datamaster_table', cookie_table)
 
