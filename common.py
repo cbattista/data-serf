@@ -24,8 +24,7 @@ import datetime
 from config import *
 from mako_defs import *
 
-#note to self : i don't know what this 'sids' variable is for...
-TABLE_VARS = ['subject', 'trial', 'IV', 'DV', 'sids', 'run', 'outlier']
+TABLE_VARS = ['subject', 'trial', 'IV', 'DV', 'run', 'outlier', 'sids']
 TVs = ['subject', 'trial', 'IV', 'DV', 'run', 'outlier']
 
 def inspect(table):
@@ -94,7 +93,6 @@ def markVariables(table, inspection):
 
 	activity_log("upload", "auto-choose", table, inspection)
 
-
 def getVariables(table, sids=False):
 	var_table = "%s_vars" % table
 
@@ -119,19 +117,44 @@ def getVariables(table, sids=False):
 	if DVs:
 		output[3] = DVs.distinct('name')
 
-	if sid and sids:
-		sids = dm.db[table].posts.find().distinct(sid['name'])
-		output[4] = sids
-
 	run = VARs.find_one({'var_type': 'run'})
 	if run:
-		output[5] = run['name']
+		output[4] = run['name']
 
 	outlier = VARs.find_one({'var_type': 'outlier'})
 	if outlier:
-		output[6] = outlier['name']
+		output[5] = outlier['name']
+
+	if sid and sids:
+		sids = dm.db[table].posts.find().distinct(sid['name'])
+		output[6] = sids
+
 
 	return output
+
+def variableTable(table):
+	"""
+	return a nicely formatted table indicating which variables the user has selected	
+
+	"""
+	VARs = getVariables(table)
+	displayList = [["<b>Variable Type</b>", "<b>Variable Name</b>"]]
+
+	for varType in TVs:
+		i = TVs.index(varType)
+		var = VARs[i]
+		if var:
+			if type(var) == list:
+				for v in var:
+					displayList.append([varType, v])
+			else:
+				displayList.append([varType, var])
+		else:
+			displayList.append([varType, 'None selected'])	
+
+	table = getTable(displayList)
+
+	return table
 
 def getCookie(name):
 	cookie = cherrypy.request.cookie
@@ -156,11 +179,9 @@ def removeCookie(name, value):
 def preview(table, kwargs, source):
 	dm = mt.MongoAdmin("datamaster")
 
-	sid, trial, IVs, DVs, sids, run, outlier = getVariables(table, sids=True)
+	sid, trial, IVs, DVs, run, outlier, sids = getVariables(table, sids=True)
 
 	output = ""
-
-	print sid, trial, IVs, DVs
 
 	if sid and trial and (IVs or DVs):
 		if kwargs.has_key('op-preview'):
