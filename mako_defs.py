@@ -306,10 +306,10 @@ template = Template("""
 	<br/>
 	<br/>
 	<p><em>1. Tell your friends and colleagues.</em>  I can't market this site on my own.  If you find this site to be an invaluable tool, then let others know about it!  At this point I'm not too worried about overloading the site with users (indeed, my eventual plan is to crowdsource this baby into a self-sustaining site, where users basically pay for the CPU/server time they use, and that's it).</p>	
-	<p><em>2. Find bugs.</em> I can't test every feature of this site on my own, so I rely on my users to submit bug reports.  Right now you can do this by just <a href="mailto:battista.christian@gmail.com?Subject=data-serf%20Bug%20Report" target="_top">emailing me</a>, but before you do, please check out the list of known bugs/issues that I already have, <a href='https://github.com/cbattista/data-serf/issues?state=open'>here</a>.</p>
-	<p><em>3.  Fund the development of new features.</em>  Is there a feature you'd like to see?  Let me know!  Even if it's specific to your research, let me know - I have been writing custom code for the psych/neuro crowd for 10 years now, and I've gotten pretty good at it.  So <a href="mailto:battista.christian@gmail.com?Subject=data-serf%20Feature%20Request" target="_top">
+	<p><em>2. Find bugs.</em> I can't test every feature of this site on my own, so I rely on my users to submit bug reports.  Right now you can do this by just <a href="mailto:battista.christian@gmail.com?Subject=dataserf%20Bug%20Report" target="_top">emailing me</a>, but before you do, please check out the list of known bugs/issues that I already have, <a href='https://github.com/cbattista/dataserf/issues?state=open'>here</a>.</p>
+	<p><em>3.  Fund the development of new features.</em>  Is there a feature you'd like to see?  Let me know!  Even if it's specific to your research, let me know - I have been writing custom code for the psych/neuro crowd for 10 years now, and I've gotten pretty good at it.  So <a href="mailto:battista.christian@gmail.com?Subject=dataserf%20Feature%20Request" target="_top">
 contact me</a> about any potential features, and I can send you a quote - it might be cheaper than you think.  <em>Note:</em>  this also applies to fixing existing bugs.</p>
-	<p><em>4.  Just donate.</em>  If you're impressed with the site, and want to see it grow and prosper, then consider just making a donation.  If you run a lab, then consider how much time you will free up for your grads and RAs to do more important things, like writing and data collection.  <a href="mailto:battista.christian@gmail.com?Subject=data-serf%20Donation" target="_top">Contact me </a> for more details about this (at this point, I want to establish a relationship with potential funders before accepting any money).  Current sponsors include : the <a href='http://www.numericalcognition.org'>Numerical Cognition Lab</a>.</p>
+	<p><em>4.  Just donate.</em>  If you're impressed with the site, and want to see it grow and prosper, then consider just making a donation.  If you run a lab, then consider how much time you will free up for your grads and RAs to do more important things, like writing and data collection.  <a href="mailto:battista.christian@gmail.com?Subject=dataserf%20Donation" target="_top">Contact me </a> for more details about this (at this point, I want to establish a relationship with potential funders before accepting any money).  Current sponsors include : the <a href='http://www.numericalcognition.org'>Numerical Cognition Lab</a>.</p>
 
 <hr>
 
@@ -329,7 +329,7 @@ contact me</a> about any potential features, and I can send you a quote - it mig
 
 <%def name='learn_content(domain)'>
 	<p>Greetings Lords and Ladies, my name is Christian and I am the guy who made the dataserf.  The dataserf is in its early stages, but I do believe though that it works well enough to perform some basic labours, including data modification and aggregation, for you.</p>
-	<p>When you analyze your data, you usually have it organized in a spreadsheet that you put into SPSS or R or something.  But before that happens, you need to organize all your individual subject files, average all the values, maybe changing the labels of some of your conditions or adjusting variables like reaction time.  This usually manifests itself as a whole pile of repetitive tasks that you don't want to do.</p>
+	<p>When you analyze your data, you usually have it organized in a spreadsheet that you put into SPSS or R (or some analysis program you like).  But before that happens, you need to organize all your individual subject files, average all the values, maybe changing the labels of some of your conditions or adjusting variables like reaction time.  This usually manifests itself as a whole pile of repetitive tasks that you don't want to do.</p>
 	<p>The dataserf was built to do these tasks for you.  It will put your data into a storage unit called a <em>table</em>.  Each table is a place to hold data from all your subjects for a given experiment.</p>
 	<p>Once the dataserf has your data in a table, it can modify the <em>variables</em>.  A variable is a value from a column in your spreadsheet.  So this might be your reaction time data, accuracy, or your experimental conditions.</p>
 	<p>Using a table, the dataserf can also average your data into a summary spreadsheet for you to download.</p>
@@ -347,7 +347,8 @@ contact me</a> about any potential features, and I can send you a quote - it mig
 
 	<div class="thumbnail" id = "manage-small">
 	<h2>manage</h2>
-	<p>Here's an important step.  This is where you tell the dataserf what variables you're interested in.  You should indicate what your independent variables and dependent variables are, and also what variable name you're using to indicate your subject and trial variables.  Once you've selected these, you can review them to make sure you picked all the ones you're interested in (and you can always go back later and select some more).</p>
+	<p>Here's an important step.  When you upload your first set of files into a table, the dataserf will attempt to guess what the important variables are.  It will try to identify the subject, trial, and run/session variable based on the contents of your file.  It will also try to guess what the DVs are called, by looking for the terms 'ACC' and 'RT'.  But, it won't necessarily guess perfectly, and it won't be able to tell what your IVs are called.  So, you use the manage page to identify the IVs, DVs, and correct any mistakes it made trying to guess your subject, trial, and run/session variables.  Once you've selected them, you can review them to make sure you picked all the ones you're interested in (and you can always go back later and select some more).</p>
+
 	</div>
 
 	<div class="thumbnail" id="modify-small">
@@ -361,15 +362,23 @@ contact me</a> about any potential features, and I can send you a quote - it mig
 	<p>If RT >= 2.5</p>
 	<p>Set ACC = 0</p>
 	<p>Pretty simple, huh?</p>
+	<p>There is also some outlier detection functionality built in.  There are two things you can do - mark certain trials as outliers based on a static value, or use recursive outlier detection based on an SD threshold.  Right now recursive outlier detection operates on the entire table, but if I get the time I'd like to make it work on a subject-by-subject basis (check out the 'support' link at the top of the page to see how you can help make this happen faster.
+	</p>
+
 	</div>
 
 	<div class="thumbnail" id="download-small">
 	<h2>download</h2>
-	<p>Here's the really magical part.  Just check off the variables you want to see in your file and you're off to the races.  Right now the file you'll get is one suitable for SPSS (where each participant's data is on a separate row).  They take a bit to make, but any files you create can be downloaded later on.</p>
+	<p>Here's the really magical part.  On this page, you can aggregate your data (for use in R or SPSS), download it either as a single file or one file per subject, and also download some PRTs (which is a file format needed for BrainVoyager).</p>
+	<p>To aggregate just check off the variables you want to see in your file and you're off to the races.  Right now the file you'll get is one suitable for SPSS (where each participant's data is on a separate row).  They take a few seconds to make, but any files you create can be downloaded later on.</p>
 	<p>Also, you have the option of including only certain values from your table.  You can specify this like you did in the 'Modify' section.</p>
+	<p>To make PRT files, first indicate the Experiment Onset Delay - for instance if there is any lag between when the scanner started and when your stimulus display program started showing the stimuli.  If there's no lag, just leave it at zero</p>
+	<p>Then indicate which variable contains the stimulus onset, and the offset (e.g., how long the stimulus lasted).  Then add a condition to group the onsets by.</p>
+	<p>If you want to check the accuracy (and thus include an 'Error' column), indicate which variable contains the accuracy and reaction time.  The reason dataserf needs to know the reaction time is so that it in the event there are no errors, it will use the trial with the longest RT (BV does not like it when you don't have values in each condition).</p>
 	<br/>
 	</div>
 	<p>And that's about it.  Click on the links below to get started (hint:  if this is your first time on the site, start in the upload section).</p>
+	<p>If you need help with anything, please feel free to <a href="mailto:battista.christian@gmail.com?Subject=dataserf%20help%20request" target="_top"> contact me</a>.  The same goes for feature requests - I am always up for a little freelance work, and like it when I get a chance to improve the dataserf.  Check out the 'support' link at the top of the page for more info on this.</p>
 </%def>
 
 """)
