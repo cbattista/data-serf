@@ -27,6 +27,20 @@ from mako_defs import *
 TABLE_VARS = ['subject', 'trial', 'IV', 'DV', 'run', 'outlier', 'sids']
 TVs = ['subject', 'trial', 'IV', 'DV', 'run', 'outlier']
 
+def safePath(path):
+        path = path.replace(' ', '_')
+        path = path.replace(':', '')
+        path = path.replace(',', '')
+        path = path.replace('>', '_')
+        path = path.replace('$', '')
+        path = path.replace('[', '')
+        path = path.replace(']', '')
+        path = path.replace('{', '')
+        path = path.replace('}', '')
+        path = path.replace("'", "")
+        return path
+
+
 def inspect(table):
 	db = mt.MongoAdmin("datamaster")
 	posts = db.getTable(table).posts
