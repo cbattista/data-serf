@@ -85,11 +85,12 @@ class modify(object):
 				else:
 					ot = mt.StringToType(kwargs['op_text'])
 					for row in posts.find():
-						if kwargs['op'] == '-=':
-							row[name] = row[kwargs['orig_var']] - ot
-						elif kwargs['op'] == '+=':
-							row[name] = row[kwargs['orig_var']] - op
-						posts.save(row)
+						if row.has_key(kwargs['orig_var']):
+							if kwargs['op'] == '-=':
+								row[name] = row[kwargs['orig_var']] - ot
+							elif kwargs['op'] == '+=':
+								row[name] = row[kwargs['orig_var']] - op
+							posts.save(row)
 			else:
 				posts.update({}, {'$set':{name : 'NA'}})
 	
