@@ -278,6 +278,7 @@ class download(object):
 
 		#write that biznass out
 		name = dm.write(datatable, q, headers = headers, sort=sort)
+		name = os.path.basename(name)
 
 		name += ".csv"
 
