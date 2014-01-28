@@ -41,7 +41,7 @@ def strip(item):
 	return item
 
 class prtFile:
-	def __init__(self, table, sid, run, settings = "", onset_start = 16000, offset=1950, checkErrors=False, source="eprime", duration=2, TR = 2.0, skippedTRs=2):
+	def __init__(self, db="datamaster", table="test", sid="sid", run="run", settings = "", onset_start = 0, offset=1950, checkErrors=False, source="eprime", duration=2):
 		self.settings = settings
 		self.onset_start = onset_start
 		self.offset = offset
@@ -50,16 +50,17 @@ class prtFile:
 		self.sid = sid
 		self.run = run
 		self.duration = duration
-		self.TR = TR
-		self.skippedTRs=skippedTRs
-		self.posts = mt.MongoAdmin("datamaster").db[table].posts
+		self.posts = mt.MongoAdmin(db).db[table].posts
 		self.subjects = self.posts.distinct(sid)
 		self.fileList = []
 
-	def make(self, field, conditions, stim_onset, acc="ACC", rt="RT", trial="trial", balance = True, name=""):
+	def make(self, field, conditions, stim_onset, acc="ACC", rt="RT", trial="trial", balance = False, name="", query={}, sess_name="session name"):
 		posts = self.posts
 
+		self.sess_name = sess_name
+
 		for subject in self.subjects:
+			print subject
 			runs = posts.find({self.sid : subject}).distinct(self.run)
 			for run in runs:
 				prtDict = {}
@@ -72,12 +73,13 @@ class prtFile:
 				#q = {self.sid : subject, self.run : run, rt : {'$exists':True}}
 
 				#get rows
-				rows = posts.find({self.sid : subject, self.run : run}).sort(trial, 1)
+				rows = posts.find(dict(query, **{self.sid : subject, self.run : run})).sort(trial, 1)
 
 				#calculate subtractor
-				subtractor = self.onset_start - rows[0][stim_onset]
-
-				print subject, run, subtractor, rows[0][stim_onset]
+				if self.onset_start:
+					subtractor = self.onset_start - rows[0][stim_onset]
+				else:
+					subtractor = 0
 				
 				for row in rows:
 					proceed = True
@@ -151,6 +153,7 @@ class prtFile:
 				self.makePRT()
 				name = "%s_%s_%s_%s" % (self.table, field, subject, run)
 				self.writePRT(name)
+				self.writeSPM(name)
 				#self.writeEV(name)
 
 	#generate a list of colours from the prtDict
@@ -234,13 +237,54 @@ class prtFile:
 
 
 	def writePRT(self, name):
-		fname = "output/%s.prt" % name
+		fname = "output/prt/%s.prt" % name
 
 		f = open(fname, "w")
 		f.write(self.settings)
 		f.write(self.prtString)
 		f.close()
 		self.fileList.append(fname)
+
+	def writeSPM(self, name):
+		import scipy.io
+		import numpy
+
+		data = self.prtDict
+
+		fname = "output/mat/%s.m" % name
+	
+		f = open(fname, 'w')
+	
+		f.write("sess_name = '%s';\n\n" % self.sess_name)
+
+		conditions = data.keys()
+
+		conditions.sort()
+		
+		n = len(conditions)
+		
+		output = ""
+
+		for cond in conditions:
+			i = conditions.index(cond) + 1
+			output += "names{%i} = ['%s'];\n" % (i, cond)
+			onsets = self.prtDict[cond]
+			onset_vector = []
+			duration_vector = []
+			for onset in onsets:
+				on = onset.split(' ')[0]
+				onset_vector.append(int(on) / 1000.)
+				duration_vector.append(2.0)
+
+			output += "onsets{%i} = %s;\n" % (i, str(onset_vector))
+			output += "durations{%i} = %s;\n\n" % (i, str(duration_vector))
+		
+		output += "rest_exists = 1;\n\n"			
+		output += "save task_design.mat sess_name names onsets durations rest_exists"
+
+		f.write(output)
+		f.close()
+
 
 
 	def writeEV(self, name=""):
