@@ -55,6 +55,24 @@ class prtFile:
 		self.fileList = []
 
 	def make(self, field, conditions, stim_onset, acc="ACC", rt="RT", trial="trial", balance = False, name="", query={}, sess_name="session name"):
+		"""
+		This function organizes the onsets and durations into a dict called self.prtDict
+		It then calls the various writing functions
+
+		args are ...
+		field : IV to sort onsets by
+		conditions : list of IV values (present in field) - defaults to all conds present in a given run
+		stim_onset : event onset 
+		acc : accuracy
+		rt : reaction time
+		trial : trial
+		balance : don't ask, don't use
+		name : name of the prt file to be output
+		query : filter values here
+		sess_name : name at the top of matlab spm8 task design files
+
+		"""
+
 		posts = self.posts
 
 		self.sess_name = sess_name
