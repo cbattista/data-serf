@@ -185,6 +185,8 @@ class download(object):
 		form += "<label>Stimulus Offset (ms):</label><input type=\"number\" name=\"prt_offset\" value=2000>"
 		form += "<hr>"
 		form += "<label>Condition:</label>" + getOptions(IVs, ID="prt_cond")
+		
+		form += "<label>Condition values:</label'>" + getRadios(["null", "null", "null"], name="prt_cond_vals", active=False)
 		form += "<hr>"
 		form += "<label>Check Accuracy?</label>" + getRadios(["yes", "no"], name='check_error')
 		form += "<label>Accuracy listed in...</label>" + getOptions(DVs, ID="prt_ACC")
@@ -192,6 +194,8 @@ class download(object):
 		form += "<hr>"
 
 		output += getForm(form, download_url)
+
+
 
 		return output
 
