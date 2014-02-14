@@ -186,7 +186,7 @@ class download(object):
 		form += "<hr>"
 		form += "<label>Condition:</label>" + getOptions(IVs, ID="prt_cond")
 		
-		form += "<label>Condition values:</label'>" + getRadios(["null", "null", "null"], name="prt_cond_vals", active=False)
+		form += "<input type='radio' name='prt_set_cons' value='new'>Specifiy conditions <input type ='text' name='prt_con_names'/></input><br/>"
 		form += "<hr>"
 		form += "<label>Check Accuracy?</label>" + getRadios(["yes", "no"], name='check_error')
 		form += "<label>Accuracy listed in...</label>" + getOptions(DVs, ID="prt_ACC")
