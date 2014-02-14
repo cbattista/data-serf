@@ -186,7 +186,7 @@ class download(object):
 		form += "<hr>"
 		form += "<label>Condition:</label>" + getOptions(IVs, ID="prt_cond")
 		
-		form += "Specify IV levels(e.g., \"level1, level2\" - leave blank to simply use levels present in run)<br/>"
+		form += "<label>Specify IV levels(e.g., <em>level1, level2</em> - leave blank to simply use levels present in run):</label>"
 		form += "<input type ='text' name='prt_con_names'/></input><br/>"
 		form += "<hr>"
 		form += "<label>Check Accuracy?</label>" + getRadios(["yes", "no"], name='check_error')
@@ -220,7 +220,7 @@ class download(object):
 		if kwargs['prt_con_names']:
 			for con in kwargs['prt_con_names'].split(','):
 				conditions.append(con.strip())
-			
+		output = ""
 		myCond = kwargs['op-prt_cond']
 
 		settings = settings = """FileVersion:       2\n\nResolutionOfTime:   msec\n\nExperiment:         %s\n\nBackgroundColor:    0 0 0\nTextColor:          255 255 255\nTimeCourseColor:    255 255 255\nTimeCourseThick:    3\nReferenceFuncColor: 0 0 80\nReferenceFuncThick: 3\n\n""" % (table)
@@ -246,7 +246,7 @@ class download(object):
 
 		common.activity_log("download", "download prts", table, kwargs)
 
-		output = getAlert("Your files are ready.  <a href='%s/%s'>Click here to download.</a>" % (domain, zippath), "good")
+		output += getAlert("Your files are ready.  <a href='%s/%s'>Click here to download.</a>" % (domain, zippath), "good")
 
 		return output
 
