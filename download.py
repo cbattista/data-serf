@@ -186,7 +186,7 @@ class download(object):
 		form += "<hr>"
 		form += "<label>Condition:</label>" + getOptions(IVs, ID="prt_cond")
 		
-		form += "Specifiy IV levels(e.g., \"level1, level2\" - leave blank to use levels present in run)<br/>"
+		form += "Specify IV levels(e.g., \"level1, level2\" - leave blank to simply use levels present in run)<br/>"
 		form += "<input type ='text' name='prt_con_names'/></input><br/>"
 		form += "<hr>"
 		form += "<label>Check Accuracy?</label>" + getRadios(["yes", "no"], name='check_error')
@@ -225,11 +225,9 @@ class download(object):
 
 		settings = settings = """FileVersion:       2\n\nResolutionOfTime:   msec\n\nExperiment:         %s\n\nBackgroundColor:    0 0 0\nTextColor:          255 255 255\nTimeCourseColor:    255 255 255\nTimeCourseThick:    3\nReferenceFuncColor: 0 0 80\nReferenceFuncThick: 3\n\n""" % (table)
 
-		print datatable
-
 		prt_maker = makePRTs.prtFile("datamaster", datatable, sid, run,  settings, onset_start, stim_offset, check_errors)
 
-		prt_maker.make(myCond, [], stim_onset, ACC, RT, trial, balance=False)
+		prt_maker.make(myCond, conditions, stim_onset, ACC, RT, trial, balance=False)
 
 		files = prt_maker.fileList
 		zipname = "%s_%s_prts" % (datatable, myCond)
