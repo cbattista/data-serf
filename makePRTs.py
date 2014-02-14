@@ -41,7 +41,7 @@ def strip(item):
 	return item
 
 class prtFile:
-	def __init__(self, db="datamaster", table="test", sid="sid", run="run", settings = "", onset_start = 0, offset=1950, checkErrors=False, source="eprime", duration=2):
+	def __init__(self, db="datamaster", table="test", sid="sid", run="run", settings = "", onset_start = 0, offset=1950, checkErrors=False, duration=2):
 		self.settings = settings
 		self.onset_start = onset_start
 		self.offset = offset
@@ -50,8 +50,14 @@ class prtFile:
 		self.sid = sid
 		self.run = run
 		self.duration = duration
-		self.posts = mt.MongoAdmin(db).db[table].posts
+		self.posts = mt.MongoAdmin(db).getTable(table).posts
+
+		for row in self.posts.find():
+			print row
 		self.subjects = self.posts.distinct(sid)
+
+		print self.subjects
+
 		self.fileList = []
 
 	def make(self, field, conditions, stim_onset, acc="ACC", rt="RT", trial="trial", balance = False, name="", query={}, sess_name="session name"):
@@ -171,7 +177,7 @@ class prtFile:
 				self.makePRT()
 				name = "%s_%s_%s_%s" % (self.table, field, subject, run)
 				self.writePRT(name)
-				self.writeSPM(name)
+				#self.writeSPM(name)
 				#self.writeEV(name)
 
 	#generate a list of colours from the prtDict
@@ -230,6 +236,8 @@ class prtFile:
 				prtString = "%s%s\n\n" % (prtString, self.codeDict[k])       
 
 		self.prtString = prtString
+
+		print prtString
 
 	def makeICA(self):
 		f = open("ICA.txt", 'a')

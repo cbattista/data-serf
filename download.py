@@ -220,7 +220,9 @@ class download(object):
 
 		settings = settings = """FileVersion:       2\n\nResolutionOfTime:   msec\n\nExperiment:         %s\n\nBackgroundColor:    0 0 0\nTextColor:          255 255 255\nTimeCourseColor:    255 255 255\nTimeCourseThick:    3\nReferenceFuncColor: 0 0 80\nReferenceFuncThick: 3\n\n""" % (table)
 
-		prt_maker = makePRTs.prtFile(datatable, sid, run,  settings, onset_start, stim_offset, check_errors, source="database")
+		print datatable
+
+		prt_maker = makePRTs.prtFile("datamaster", datatable, sid, run,  settings, onset_start, stim_offset, check_errors)
 
 		prt_maker.make(myCond, [], stim_onset, ACC, RT, trial, balance=False)
 

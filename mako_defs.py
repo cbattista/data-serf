@@ -122,7 +122,7 @@ template = Template("""
 	</form>
 </%def>
 
-<%def name = "radiobuttons(buttons, name, checkbox)">
+<%def name = "radiobuttons(buttons, name, checkbox, disabled)">
 	%for button in buttons:
 	<label class="radio">
 		%if (buttons.index(button) + 1) == checkbox:
@@ -384,8 +384,11 @@ contact me</a> about any potential features, and I can send you a quote - it mig
 """)
 
 
-def getRadios(buttons, name="", check=0):
-	output = template.get_def("radiobuttons").render(buttons=buttons, name=name, checkbox=check)
+def getRadios(buttons, name="", check=0, active = True):
+	disabled = "enabled"
+	if not active:
+		disabled = "disabled"
+	output = template.get_def("radiobuttons").render(buttons=buttons, name=name, checkbox=check, disabled=disabled)
 	return output
 
 def getCheckbox(myList, br=False):
