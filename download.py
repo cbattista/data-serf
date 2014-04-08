@@ -295,7 +295,7 @@ class download(object):
 		if not up.find_one({'user':u, 'fname':name}):
 			up.insert({'user':u, 'fname':name})
 		common.activity_log("download", "download single raw", table, kwargs)
-		output = getAlert("Your file is ready.  <a href='%s/%s'>Click here to download.</a>" % (domain, name), "good")
+		output = getAlert("Your file is ready.  <a href='%s/output/%s'>Click here to download.</a>" % (domain, name), "good")
 		return output
 
 	def raw(self, table):
