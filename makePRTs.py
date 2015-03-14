@@ -52,11 +52,7 @@ class prtFile:
 		self.duration = duration
 		self.posts = mt.MongoAdmin(db).getTable(table).posts
 
-		for row in self.posts.find():
-			print row
 		self.subjects = self.posts.distinct(sid)
-
-		print self.subjects
 
 		self.fileList = []
 
@@ -84,7 +80,6 @@ class prtFile:
 		self.sess_name = sess_name
 
 		for subject in self.subjects:
-			print subject
 			runs = posts.find({self.sid : subject}).distinct(self.run)
 			for run in runs:
 				prtDict = {}
@@ -202,7 +197,6 @@ class prtFile:
 			l2.sort()
 
 			if l1 != l2:
-				print "Keys don't match"
 				os.remove("conditions.col")
 				codeDict = {}
 				for k in self.prtDict.keys():
@@ -237,7 +231,6 @@ class prtFile:
 
 		self.prtString = prtString
 
-		print prtString
 
 	def makeICA(self):
 		f = open("ICA.txt", 'a')
