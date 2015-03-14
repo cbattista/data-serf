@@ -155,6 +155,8 @@ class upload(object):
 				if not data:
 				    break
 				lines += data
+			if len(lines) == 1:
+				lines = lines[0].split('\r')
 
 			d = {'source_file' : myFile.filename}
 
